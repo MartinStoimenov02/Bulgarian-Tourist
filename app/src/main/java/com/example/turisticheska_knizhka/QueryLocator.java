@@ -159,6 +159,7 @@ public class QueryLocator {
                 if (document.exists()) {
                     // Convert the document snapshot to a Place object
                     Place place = document.toObject(Place.class);
+                    place.setId(document.getId());
                     callback.onPlaceLoaded(place); // Return the Place object via callback
                 } else {
                     // Handle document not found

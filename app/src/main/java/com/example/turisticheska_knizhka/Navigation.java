@@ -40,10 +40,11 @@ public class Navigation {
             if(item.getItemId()==R.id.action_help){
                 navigateToHelp();
                 return true;
-            } else if(item.getItemId()==R.id.action_notifications){
-                //navigateToHomeActivity();
-                return true;
             }
+//            else if(item.getItemId()==R.id.action_notifications){
+                //navigate to notifications
+//                return true;
+//            }
             return false;
         });
     }

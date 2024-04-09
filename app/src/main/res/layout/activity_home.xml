@@ -203,6 +203,8 @@
                 android:id="@+id/topUsersLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingBottom="5dp"
                 android:orientation="vertical">
                 <!-- Your top users layout here -->
             </LinearLayout>
@@ -219,6 +221,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
                 android:textStyle="bold|italic"/>
 
             <!-- Space between "Me" TextView and the line -->

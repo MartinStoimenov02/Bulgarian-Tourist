@@ -3,16 +3,20 @@ package com.example.turisticheska_knizhka;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.rpc.Help;
 
 import java.util.List;
 
@@ -23,6 +27,9 @@ public class PlaceView extends AppCompatActivity {
     TextView workingHoursTextView;
     TextView distanceTextView;
     Button visitButton;
+    Button showOnMapButton;
+    ImageView flagImageView;
+    ImageButton favouriteButton;
     String email;
     private BottomNavigationView bottomNavigationView;
 
@@ -41,6 +48,9 @@ public class PlaceView extends AppCompatActivity {
         workingHoursTextView = findViewById(R.id.workingHoursTextView);
         distanceTextView = findViewById(R.id.distanceTextView);
         visitButton = findViewById(R.id.visitButton);
+        flagImageView = findViewById(R.id.flagImageView);
+        favouriteButton = findViewById(R.id.favouriteButton);
+        showOnMapButton = findViewById(R.id.showOnMapButton);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,21 +71,23 @@ public class PlaceView extends AppCompatActivity {
 
         switch (caseNumber){
             case 1:
-                showMyPlace(placeId);
+                showMyPlace(placeId, false);
                 break;
             case 2:
                 show100ntos(placeId);
                 break;
             case 3:
-                //visited place with only sohw on map
+                showMyPlace(placeId, true);
                 break;
             default:
                 //
         }
     }
 
-    private void showMyPlace(String placeId){
-        visitButton.setText("Посети");
+    private void showMyPlace(String placeId, boolean isVisited){
+        if(isVisited)visitButton.setVisibility(View.INVISIBLE);
+        else visitButton.setText("Посети");
+
         QueryLocator.getMyPlaceById(placeId, new SinglePlaceCallback() {
             @Override
             public void onPlaceLoaded(Place place) {
@@ -85,6 +97,14 @@ public class PlaceView extends AppCompatActivity {
                     phoneNumberTextView.setText(place.getPlacePhoneNumber());
                     workingHoursTextView.setText(place.getWorkingHours());
                     distanceTextView.setText(String.valueOf(place.getDistance()));
+                    if(Helper.checkIsNTO(place)){
+                        flagImageView.setVisibility(View.VISIBLE);
+                    } else {
+                        flagImageView.setVisibility(View.GONE);
+                    }
+                    setHeartImg(place);
+
+                    changeFavourite(place);
 
                     // Example for loading image using Glide
                     Glide.with(PlaceView.this)
@@ -92,6 +112,13 @@ public class PlaceView extends AppCompatActivity {
                             .placeholder(R.drawable.placeholder_image)
                             .error(R.drawable.error_image)
                             .into(placeImageView);
+
+                    showOnMapButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Helper.showOnMap(PlaceView.this, place);
+                        }
+                    });
                 } else {
                     // Handle case where place is null
                     Toast.makeText(PlaceView.this, "Place not found", Toast.LENGTH_SHORT).show();
@@ -107,6 +134,28 @@ public class PlaceView extends AppCompatActivity {
 
     }
 
+    private void changeFavourite(Place place){
+        favouriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("FAVORITE", "id: "+place.getId());
+                Log.d("FAVORITE", "fav: "+place.getIsFavourite());
+                // Toggle favourite status
+                place.setIsFavourite(!place.getIsFavourite());
+                QueryLocator.updateFavouriteStatus(place.getId(), place.getIsFavourite());
+                setHeartImg(place);
+            }
+        });
+    }
+
+    private void setHeartImg(Place place){
+        if (place.getIsFavourite()) {
+            favouriteButton.setImageResource(R.drawable.ic_favorite_filled);
+        } else {
+            favouriteButton.setImageResource(R.drawable.ic_favorite_border);
+        }
+    }
+
     private void show100ntos(String placeId){
         Log.d("NTO100_ID", "id: "+placeId);
         visitButton.setText("Добави за посещение");
@@ -120,6 +169,8 @@ public class PlaceView extends AppCompatActivity {
                     phoneNumberTextView.setText(nto100.getPlacePhoneNumber());
                     workingHoursTextView.setText(nto100.getWorkingHours());
                     distanceTextView.setText(String.valueOf(nto100.getDistance()));
+                    flagImageView.setVisibility(View.VISIBLE);
+                    favouriteButton.setVisibility(View.INVISIBLE);
 
                     // Example for loading image using Glide
                     Glide.with(PlaceView.this)
@@ -138,7 +189,6 @@ public class PlaceView extends AppCompatActivity {
                             for(Place pl : filteredPlaces){
                                 Log.d("EQUALS", "places: "+nto100.getName()+"; "+pl.getName());
                                 if(pl.getName().equals(nto100.getName())){
-                                    //if(pl.getName().equals(nto100.getName()) || pl.getId().equals(nto100.getId()) || pl.getUrlMap().equals(nto100.getUrlMap())){
                                     flag = true;
                                     break;
                                 }
@@ -167,6 +217,14 @@ public class PlaceView extends AppCompatActivity {
                             visitButton.setVisibility(View.INVISIBLE);
                         }
                     });
+
+                    showOnMapButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Helper.showOnMap(PlaceView.this, nto100);
+                        }
+                    });
+
                 } else {
                     // Handle case where NTO100 is null
                     Toast.makeText(PlaceView.this, "NTO100 not found", Toast.LENGTH_SHORT).show();

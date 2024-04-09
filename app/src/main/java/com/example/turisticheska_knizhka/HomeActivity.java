@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,6 +70,17 @@ public class HomeActivity extends AppCompatActivity {
         textViewEmailValue = findViewById(R.id.textViewEmailValue);
         textViewEmailValue.setText("Вие сте влезнали като: " + email);
 
+        showVisitedPlaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, PlaceListView.class);
+                intent.putExtra("email", email);
+                intent.putExtra("caseNumber", 3);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         BottomNavigationView topMenu = findViewById(R.id.top_menu);
@@ -75,11 +88,8 @@ public class HomeActivity extends AppCompatActivity {
         Navigation navigation = new Navigation(email, HomeActivity.this);
         navigation.bottomNavigation(bottomNavigationView);
         navigation.topMenu(topMenu);
-
         getLinkedVisitedPlaces();
-
         fetchTopUsers();
-        //populateTopUsers();
     }
 
     private void displayPointsAndLevel() {
@@ -119,7 +129,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private void calculatePoints(){
         for(Place pl : placeList){
-            Log.d("POINTS", "Error: "+pl.getId());
             if(pl.getNto100()==null){
                 points+=2;
             }else{
@@ -160,7 +169,9 @@ public class HomeActivity extends AppCompatActivity {
     private void populateTopUsers() {
         topUsersLayout.removeAllViews(); // Clear existing views
         int i = 1;
+        Log.d("POINTS", "count of users: "+topUsers.size());
         for (User user : topUsers) {
+            Log.d("POINTS", "user: "+user.getEmail());
             // Create a TextView to display user information
             TextView textView = new TextView(this);
             if(i<=3){
@@ -180,7 +191,6 @@ public class HomeActivity extends AppCompatActivity {
             if(email.equals(user.getEmail())){
                 meTextView.setText(i+") "+user.getEmail() + ": " + user.getPoints()+" точки");
                 meTextView.setTextSize(16);
-                break;
             }
             i++;
         }

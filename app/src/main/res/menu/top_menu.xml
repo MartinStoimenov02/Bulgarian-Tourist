@@ -15,9 +15,13 @@
     <item
         android:id="@+id/space2"
         android:title=""/>
-
+    <item
+        android:id="@+id/space3"
+        android:title=""/>
+<!--
     <item
         android:id="@+id/action_notifications"
         android:title=""
         android:icon="@android:drawable/ic_lock_silent_mode_off"/>
+        -->
 </menu>

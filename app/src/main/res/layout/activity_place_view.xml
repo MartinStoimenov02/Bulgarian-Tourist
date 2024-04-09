@@ -38,8 +38,7 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/detailsLayout"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.972"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintVertical_bias="0.972" />
 
     <!-- Bottom navigation view -->
 
@@ -131,10 +130,10 @@
             android:id="@+id/showOnMapButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            app:backgroundTint="@null"
             android:background="@drawable/rounded_button_orange"
-            android:text="Покажи на картата" />
+            android:text="Покажи на картата"
+            android:textColor="@color/white"
+            app:backgroundTint="@null" />
 
         <Button
             android:id="@+id/visitButton"
@@ -150,8 +149,26 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_menu" />
+
+    <ImageView
+        android:id="@+id/flagImageView"
+        android:layout_width="40dp"
+        android:layout_height="29dp"
+        android:src="@drawable/bulgarian_flag"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/placeImageView"
+        app:layout_constraintEnd_toEndOf="@+id/placeImageView" />
+
+    <ImageButton
+        android:id="@+id/favouriteButton"
+        android:layout_width="29dp"
+        android:layout_height="27dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_favorite_border"
+        app:layout_constraintBottom_toBottomOf="@+id/placeNameTextView"
+        app:layout_constraintEnd_toEndOf="@+id/placeImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

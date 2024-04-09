@@ -28,7 +28,7 @@ public class PlaceListView extends AppCompatActivity {
     int caseNumber;
     QueryLocator queryLocator;
     ListView placeListView;
-    private BottomNavigationView bottomNavigationView;
+    private static BottomNavigationView bottomNavigationView;
     List<Place> places;
     PlaceAdapter adapter;
     Button addButton;
@@ -45,14 +45,6 @@ public class PlaceListView extends AppCompatActivity {
         }
 
         placeListView = findViewById(R.id.placeListView);
-
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_my_places);
-        BottomNavigationView topMenu = findViewById(R.id.top_menu);
-        topMenu.setSelectedItemId(R.id.space);
-        Navigation navigation = new Navigation(email, PlaceListView.this);
-        navigation.bottomNavigation(bottomNavigationView);
-        navigation.topMenu(topMenu);
 
         addButton = findViewById(R.id.addButton);
 
@@ -87,6 +79,7 @@ public class PlaceListView extends AppCompatActivity {
     }
 
     private void listMyPlaces() {
+        navigationMenu(R.id.action_my_places);
         QueryLocator.getMyPlaces(email, new PlacesCallback() {
             @Override
             public void onPlacesLoaded(List<Place> places) {
@@ -107,6 +100,7 @@ public class PlaceListView extends AppCompatActivity {
     }
 
     private void listNto100(){
+        navigationMenu(R.id.action_nto100);
         addButton.setVisibility(View.GONE);
         QueryLocator.getNto100(new NTO100Callback() {
             @Override
@@ -146,7 +140,25 @@ public class PlaceListView extends AppCompatActivity {
     }
 
     private void listVisitedPlaces(){
-        // Имплементация на метода по ваше желание
+        navigationMenu(R.id.action_home);
+        addButton.setVisibility(View.GONE);
+        QueryLocator.getVisitedPlaces(email, new PlacesCallback() {
+            @Override
+            public void onPlacesLoaded(List<Place> places) {
+                // Update the filteredPlaces list
+                List<Place> visitedPlaces = places;
+
+                // Populate the ListView with filtered places
+                PlaceAdapter adapter = new PlaceAdapter(PlaceListView.this, visitedPlaces, email, caseNumber);
+                placeListView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // Handle error
+                Toast.makeText(PlaceListView.this, "Error loading places", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void sortPlaces(List<Place> places, int sortType) {
@@ -192,6 +204,16 @@ public class PlaceListView extends AppCompatActivity {
                 });
                 break;
         }
+    }
+
+    private void navigationMenu(int nav){
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(nav);
+        BottomNavigationView topMenu = findViewById(R.id.top_menu);
+        topMenu.setSelectedItemId(R.id.space);
+        Navigation navigation = new Navigation(email, PlaceListView.this);
+        navigation.bottomNavigation(bottomNavigationView);
+        navigation.topMenu(topMenu);
     }
 
 }
