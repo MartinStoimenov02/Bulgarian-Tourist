@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_help"
+        android:title=""
+        android:icon="@android:drawable/ic_menu_help"/>
+    <item
+        android:id="@+id/space"
+        android:title=""
+        android:visible="false"/>
+    <item
+        android:id="@+id/space1"
+        android:title=""/>
+    <item
+        android:id="@+id/space2"
+        android:title=""/>
+
+    <item
+        android:id="@+id/action_notifications"
+        android:title=""
+        android:icon="@android:drawable/ic_lock_silent_mode_off"/>
+</menu>

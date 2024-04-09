@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+  <!-- Toolbar -->
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      app:title="Регистрация"
+      android:background="@color/orange"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
+
+  <!-- Name Input Field -->
+  <EditText
+      android:id="@+id/name"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="32dp"
+      android:hint="Име"
+      android:textColor="@color/black"
+      android:inputType="textPersonName"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+  <!-- Email Input Field -->
+  <EditText
+      android:id="@+id/email"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="32dp"
+      android:hint="Имейл адрес"
+      android:textColor="@color/black"
+      android:inputType="textEmailAddress"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/name" />
+
+  <!-- Phone Input Field -->
+  <EditText
+      android:id="@+id/phone"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="32dp"
+      android:hint="Телефонен номер"
+      android:inputType="phone"
+      android:textColor="@color/black"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/email" />
+
+  <!-- Password Input Field -->
+  <EditText
+      android:id="@+id/password"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="32dp"
+      android:hint="Парола"
+      android:textColor="@color/black"
+      android:inputType="textPassword"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/phone" />
+
+  <!-- Confirm Password Input Field -->
+  <EditText
+      android:id="@+id/confirmPassword"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="32dp"
+      android:hint="Потвърди паролата"
+      android:textColor="@color/black"
+      android:inputType="textPassword"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/password" />
+
+  <!-- Show Password Checkbox -->
+  <CheckBox
+      android:id="@+id/showPassword"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="Покажи парола"
+      app:buttonTint="@color/orange"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/confirmPassword" />
+
+  <!-- Signup Button -->
+  <Button
+      android:id="@+id/signupButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="24dp"
+      android:layout_marginEnd="32dp"
+      android:text="Регистрирай се!"
+      app:backgroundTint="@null"
+      android:background="@drawable/rounded_button_orange"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/showPassword" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

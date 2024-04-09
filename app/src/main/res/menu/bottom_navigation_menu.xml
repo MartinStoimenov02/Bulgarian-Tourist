@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_home"
+        android:title="Начало"
+        android:icon="@android:drawable/ic_menu_view" />
+    <item
+        android:id="@+id/action_my_places"
+        android:title="Моите места"
+        android:icon="@android:drawable/ic_menu_myplaces" />
+    <item
+        android:id="@+id/action_nto100"
+        android:title="100 НТО"
+        android:icon="@android:drawable/ic_menu_mapmode" />
+    <item
+        android:id="@+id/action_nearest"
+        android:title="В близост"
+        android:icon="@android:drawable/ic_menu_compass" />
+    <item
+        android:id="@+id/action_profile"
+        android:title="Профил"
+        android:icon="@android:drawable/ic_menu_preferences" />
+</menu>

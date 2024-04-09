@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PlaceListView"
+    android:background="@color/white">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/top_menu"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:itemIconSize="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/orange"
+        app:menu="@menu/top_menu">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Туристическа книжка"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <!-- Top Bar with Search and Buttons -->
+    <LinearLayout
+        android:id="@+id/topBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:layout_below="@id/top_menu"
+        android:gravity="center_vertical">
+
+        <!-- Search View -->
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:queryHint="Search Places"
+            android:iconifiedByDefault="false"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- Add Button -->
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- Sort Button -->
+        <Button
+            android:id="@+id/sortButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sort"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/placeListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topBarLayout"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="37dp" />
+
+    <!-- Bottom navigation view -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation_menu" />
+</RelativeLayout>

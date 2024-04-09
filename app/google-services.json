@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "993513616046",
+    "project_id": "touristpassport-192d3",
+    "storage_bucket": "touristpassport-192d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993513616046:android:94556ba6a612bdb06fb33f",
+        "android_client_info": {
+          "package_name": "com.example.turisticheska_knizhka"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6Jvtvq3e4bOcA4gcRJ1cTe1Yw-SKMhqk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

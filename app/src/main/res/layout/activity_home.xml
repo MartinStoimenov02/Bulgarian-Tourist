@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/top_menu"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:itemIconSize="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/orange"
+        app:menu="@menu/top_menu">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Туристическа книжка"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <TextView
+        android:id="@+id/textViewEmailValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="italic" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:padding="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <!-- Places count TextView -->
+            <TextView
+                android:id="@+id/textViewPlacesCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Line between the first and second LinearLayout -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/orange"
+            android:layout_below="@id/textViewPlacesCount" />
+
+        <!-- First Row: Points and Level -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Left Cell: Points -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewPointsNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="0"
+                    android:layout_marginTop="50dp"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewPointsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:text="точки"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Right Cell: Level -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewLevelNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="50dp"
+                    android:text="0"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewLevelLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="ниво"
+                    android:layout_marginTop="5dp"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Second Row: Button -->
+        <Button
+            android:id="@+id/buttonListActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/rounded_button_orange"
+            android:text="Виж посетените места"
+            android:layout_below="@id/textViewPointsNumber"/>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Second CardView to display top users and current user -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/secondCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cardView"
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <!-- Places count TextView -->
+            <TextView
+                android:id="@+id/ranking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Класация"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Line between the first and second LinearLayout -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/orange"
+            android:layout_below="@id/textViewPlacesCount" />
+
+        <!-- Linear layout to contain topUsersLayout and meTextView -->
+        <LinearLayout
+            android:id="@+id/topUsersContainer"
+            android:layout_width="match_parent"
+            android:layout_marginTop="50dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- LinearLayout to display top users -->
+            <LinearLayout
+                android:id="@+id/topUsersLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- Your top users layout here -->
+            </LinearLayout>
+
+            <!-- Line between topUsersLayout and meTextView -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/orange" />
+
+            <!-- TextView for "Me" -->
+            <TextView
+                android:id="@+id/meTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textStyle="bold|italic"/>
+
+            <!-- Space between "Me" TextView and the line -->
+            <TextView
+                android:id="@+id/spaceText"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:text=""/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Bottom navigation view -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation_menu" />
+</RelativeLayout>
