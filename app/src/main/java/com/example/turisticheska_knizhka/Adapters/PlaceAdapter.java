@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,15 +6,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.turisticheska_knizhka.Activities.PlaceView;
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.Helpers.Helper;
+import com.example.turisticheska_knizhka.Models.Place;
+import com.example.turisticheska_knizhka.R;
 
 import java.util.List;
 

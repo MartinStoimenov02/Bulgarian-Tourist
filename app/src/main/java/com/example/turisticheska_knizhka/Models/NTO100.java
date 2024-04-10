@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Models;
 
 public class NTO100 {
     public String id;

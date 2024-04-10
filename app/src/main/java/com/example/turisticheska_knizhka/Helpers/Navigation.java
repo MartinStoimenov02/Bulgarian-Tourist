@@ -1,9 +1,14 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Helpers;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.example.turisticheska_knizhka.Activities.HelpActivity;
+import com.example.turisticheska_knizhka.Activities.HomeActivity;
+import com.example.turisticheska_knizhka.Activities.PlaceListView;
+import com.example.turisticheska_knizhka.Activities.ProfileActivity;
+import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Navigation {
@@ -15,7 +20,7 @@ public class Navigation {
     }
     public void bottomNavigation(BottomNavigationView bottomNavigationView){
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            if(item.getItemId()==R.id.action_home){
+            if(item.getItemId()== R.id.action_home){
                 navigateToHomeActivity();
                 return true;
             } else if(item.getItemId()==R.id.action_my_places){

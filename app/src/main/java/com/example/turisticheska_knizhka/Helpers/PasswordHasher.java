@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Helpers;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

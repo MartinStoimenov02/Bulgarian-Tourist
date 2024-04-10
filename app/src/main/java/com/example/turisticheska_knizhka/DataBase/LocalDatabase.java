@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.DataBase;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -38,7 +38,7 @@ public class LocalDatabase extends SQLiteOpenHelper {
     }
 
     // Добавяне на нов Потребител
-    void addEmail(String email, String password) {
+    public void addEmail(String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, email);

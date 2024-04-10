@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Models;
 
 import com.google.firebase.firestore.DocumentReference;
 

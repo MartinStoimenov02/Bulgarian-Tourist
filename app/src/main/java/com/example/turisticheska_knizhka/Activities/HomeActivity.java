@@ -1,10 +1,8 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,14 +16,18 @@ import android.widget.TextView;
 import android.text.SpannableString;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.Models.Place;
+import com.example.turisticheska_knizhka.Models.User;
+import com.example.turisticheska_knizhka.Helpers.Navigation;
+import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.google.firebase.firestore.DocumentReference;

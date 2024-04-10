@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,13 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.ktx.Firebase;
 
 public class HelpActivity extends AppCompatActivity {
 
@@ -85,7 +86,7 @@ public class HelpActivity extends AppCompatActivity {
             }
         } else if (currentIndex == textContents.length - 1) {
             ProgressDialog progressDialog = ProgressDialog.show(HelpActivity.this, "Моля изчакайте", "Стартиране...", true, false);
-            removeIsFirstLoginStatus();
+            QueryLocator.removeIsFirstLoginStatus(email);
             // If currentIndex exceeds the length of textContents, open HomeActivity
             Intent intent = new Intent(HelpActivity.this, HomeActivity.class);
             intent.putExtra("email", email);
@@ -93,35 +94,6 @@ public class HelpActivity extends AppCompatActivity {
             finish();
             // Implement your finish action here
         }
-    }
-
-    private void removeIsFirstLoginStatus(){
-        firestore = FirebaseFirestore.getInstance();
-        firestore.collection("users")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            // Update the loginFirst field to false
-                            firestore.collection("users")
-                                    .document(document.getId())
-                                    .update("loginFirst", false)
-                                    .addOnSuccessListener(aVoid -> {
-                                        // Update successful
-                                        // You can perform any additional actions here if needed
-                                        Log.d("Firestore", "Login status updated successfully for user with email: " + email);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        // Error handling
-                                        Log.e("Firestore", "Error updating login status for user with email: " + email, e);
-                                    });
-                        }
-                    } else {
-                        // Error handling
-                        Log.e("Firestore", "Error getting user document with email: " + email, task.getException());
-                    }
-                });
     }
 
     // Method to handle back button click

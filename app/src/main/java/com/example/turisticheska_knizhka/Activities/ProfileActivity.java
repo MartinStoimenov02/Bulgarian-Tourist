@@ -1,8 +1,11 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
+
+import com.example.turisticheska_knizhka.Helpers.Navigation;
+import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {

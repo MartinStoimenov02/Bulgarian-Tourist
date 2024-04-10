@@ -1,10 +1,8 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
+import com.example.turisticheska_knizhka.Callbacks.SingleNTO100Callback;
+import com.example.turisticheska_knizhka.Callbacks.SinglePlaceCallback;
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.Helpers.Helper;
+import com.example.turisticheska_knizhka.Models.NTO100;
+import com.example.turisticheska_knizhka.Models.Place;
+import com.example.turisticheska_knizhka.Helpers.Navigation;
+import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.rpc.Help;
 
 import java.util.List;
 

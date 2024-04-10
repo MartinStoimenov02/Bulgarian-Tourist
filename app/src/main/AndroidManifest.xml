@@ -14,28 +14,28 @@
         android:theme="@style/Theme.Turisticheska_knizhka"
         tools:targetApi="31">
         <activity
-            android:name=".PlaceView"
+            android:name=".Activities.PlaceView"
             android:exported="false" />
         <activity
-            android:name=".PlaceListView"
+            android:name=".Activities.PlaceListView"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".Activities.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".Activities.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".HelpActivity"
+            android:name=".Activities.HelpActivity"
             android:exported="false" />
         <activity
-            android:name=".CodeVerificationActivity"
+            android:name=".Activities.CodeVerificationActivity"
             android:exported="false" />
         <activity
-            android:name=".SignUpView"
+            android:name=".Activities.SignUpView"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

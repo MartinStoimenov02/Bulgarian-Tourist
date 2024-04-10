@@ -1,33 +1,28 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.DataBase;
 
-import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.turisticheska_knizhka.Models.NTO100;
+import com.example.turisticheska_knizhka.Models.Place;
+import com.example.turisticheska_knizhka.Callbacks.NTO100Callback;
+import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
+import com.example.turisticheska_knizhka.Callbacks.SingleNTO100Callback;
+import com.example.turisticheska_knizhka.Callbacks.SinglePlaceCallback;
+import com.example.turisticheska_knizhka.Models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class QueryLocator {
 
@@ -192,6 +187,60 @@ public class QueryLocator {
                 });
     }
 
+
+    public static void registerUser(String name, String email, String phone, String hashedPassword) {
+        // Create a new User object with the user's information
+        User user = new User(name, email, phone, hashedPassword);
+
+
+        // Get a reference to the Firestore database
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        // Add the user to the "users" collection in Firestore
+        firestore.collection("users").document(email).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // User successfully added to Firestore
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to add user to Firestore
+                        Log.e("Firestore", "Error adding user", e);
+                    }
+                });
+    }
+
+    public static void removeIsFirstLoginStatus(String email){
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Update the loginFirst field to false
+                            firestore.collection("users")
+                                    .document(document.getId())
+                                    .update("loginFirst", false)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Update successful
+                                        // You can perform any additional actions here if needed
+                                        Log.d("Firestore", "Login status updated successfully for user with email: " + email);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Error handling
+                                        Log.e("Firestore", "Error updating login status for user with email: " + email, e);
+                                    });
+                        }
+                    } else {
+                        // Error handling
+                        Log.e("Firestore", "Error getting user document with email: " + email, task.getException());
+                    }
+                });
+    }
 
 }
 

@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,13 +14,11 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,11 +31,15 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.turisticheska_knizhka.DataBase.LocalDatabase;
+import com.example.turisticheska_knizhka.Helpers.PasswordHasher;
+import com.example.turisticheska_knizhka.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.example.turisticheska_knizhka.DataBase.LocalDatabase;
 
 import java.util.List;
 import java.util.Random;
@@ -381,13 +383,13 @@ public class MainActivity extends AppCompatActivity {
         imageView.setImageResource(imageResources[randomIndex]);
     }
 
-    private void disableEditText(EditText editText) {
-        editText.setFocusable(false);
-        editText.setEnabled(false);
-        editText.setCursorVisible(false);
-        editText.setKeyListener(null);
-        //editText.setBackgroundColor(Color.TRANSPARENT);
-    }
+//    private void disableEditText(EditText editText) {
+//        editText.setFocusable(false);
+//        editText.setEnabled(false);
+//        editText.setCursorVisible(false);
+//        editText.setKeyListener(null);
+//        //editText.setBackgroundColor(Color.TRANSPARENT);
+//    }
 
     private void setupKeyboardListener() {
         final View mainLayout = findViewById(R.id.loginLayout); // Change to your main layout id

@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.turisticheska_knizhka.Models.NTO100;
+import com.example.turisticheska_knizhka.R;
 
 import java.util.List;
 

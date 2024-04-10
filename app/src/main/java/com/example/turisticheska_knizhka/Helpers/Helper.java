@@ -1,12 +1,13 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Helpers;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.Models.NTO100;
+import com.example.turisticheska_knizhka.Models.Place;
 import com.google.firebase.firestore.DocumentReference;
 
 public class Helper {

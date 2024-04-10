@@ -1,4 +1,4 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,15 +7,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.turisticheska_knizhka.Callbacks.NTO100Callback;
+import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.Models.NTO100;
+import com.example.turisticheska_knizhka.Models.Place;
+import com.example.turisticheska_knizhka.Adapters.NTOAdapter;
+import com.example.turisticheska_knizhka.Helpers.Navigation;
+import com.example.turisticheska_knizhka.Adapters.PlaceAdapter;
+import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

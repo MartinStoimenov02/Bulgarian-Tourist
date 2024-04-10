@@ -1,12 +1,8 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Activities;
 
-        import android.app.AlertDialog;
         import android.app.ProgressDialog;
-        import android.content.DialogInterface;
         import android.content.Intent;
-        import android.os.AsyncTask;
         import android.os.Bundle;
-        import android.text.Html;
         import android.util.Log;
         import android.view.View;
         import android.widget.Button;
@@ -17,21 +13,14 @@ package com.example.turisticheska_knizhka;
         import androidx.appcompat.app.AppCompatActivity;
         import androidx.appcompat.widget.Toolbar;
 
+        import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+        import com.example.turisticheska_knizhka.Models.User;
+        import com.example.turisticheska_knizhka.R;
         import com.google.android.gms.tasks.OnFailureListener;
         import com.google.android.gms.tasks.OnSuccessListener;
         import com.google.firebase.firestore.FirebaseFirestore;
 
-        import java.util.Properties;
         import java.util.Random;
-
-        import javax.mail.Authenticator;
-        import javax.mail.Message;
-        import javax.mail.MessagingException;
-        import javax.mail.PasswordAuthentication;
-        import javax.mail.Session;
-        import javax.mail.internet.InternetAddress;
-        import javax.mail.internet.MimeMessage;
-        import javax.mail.Transport;
 
 public class CodeVerificationActivity extends AppCompatActivity {
 
@@ -41,7 +30,6 @@ public class CodeVerificationActivity extends AppCompatActivity {
     private String hashedPassword;
     private String generatedCode;
     private EditText codeInput;
-    private FirebaseFirestore firestore;
     String sEmail, sPassword;
 
     @Override
@@ -91,7 +79,7 @@ public class CodeVerificationActivity extends AppCompatActivity {
                 if (enteredCode.equals(generatedCode)) {
                     ProgressDialog progressDialog = ProgressDialog.show(CodeVerificationActivity.this, "Моля изчакайте", "Извършва се регистрация...", true, false);
                     // Code is valid
-                    registerUser();
+                    QueryLocator.registerUser(name, email, phone, hashedPassword);
                     Intent intent = new Intent(CodeVerificationActivity.this, HelpActivity.class);
                     intent.putExtra("email", email);
                     startActivity(intent);
@@ -196,29 +184,7 @@ public class CodeVerificationActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser() {
-        // Create a new User object with the user's information
-        User user = new User(name, email, phone, hashedPassword);
 
-        // Get a reference to the Firestore database
-        firestore = FirebaseFirestore.getInstance();
-
-        // Add the user to the "users" collection in Firestore
-        firestore.collection("users").document(email).set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // User successfully added to Firestore
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Failed to add user to Firestore
-                        Log.e("Firestore", "Error adding user", e);
-                    }
-                });
-    }
 
 
     private String generateHtmlBody(String name, String generatedCode){

@@ -1,4 +1,6 @@
-package com.example.turisticheska_knizhka;
+package com.example.turisticheska_knizhka.Callbacks;
+
+import com.example.turisticheska_knizhka.Models.Place;
 
 import java.util.List;
 
