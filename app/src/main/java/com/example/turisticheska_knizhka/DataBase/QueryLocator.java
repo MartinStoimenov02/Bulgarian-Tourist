@@ -4,16 +4,18 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.turisticheska_knizhka.Models.NTO100;
-import com.example.turisticheska_knizhka.Models.Place;
 import com.example.turisticheska_knizhka.Callbacks.NTO100Callback;
 import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
 import com.example.turisticheska_knizhka.Callbacks.SingleNTO100Callback;
 import com.example.turisticheska_knizhka.Callbacks.SinglePlaceCallback;
+import com.example.turisticheska_knizhka.Models.NTO100;
+import com.example.turisticheska_knizhka.Models.Place;
 import com.example.turisticheska_knizhka.Models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -242,5 +244,27 @@ public class QueryLocator {
                 });
     }
 
+    public static void addPlaceToMyPlaces(Place newPlace){
+        // Access a Cloud Firestore instance
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Get a reference to the "places" collection
+        CollectionReference placesCollectionRef = db.collection("places");
+
+        // Add the new place to the "places" collection
+        placesCollectionRef.add(newPlace)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            // Place added successfully
+                            Log.d("TAG", "Place added with ID: " + task.getResult().getId());
+                        } else {
+                            // Failed to add place
+                            Log.w("TAG", "Error adding place", task.getException());
+                        }
+                    }
+                });
+    }
 }
 

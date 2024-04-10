@@ -1,8 +1,5 @@
 package com.example.turisticheska_knizhka.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,15 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.bumptech.glide.Glide;
 import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
 import com.example.turisticheska_knizhka.Callbacks.SingleNTO100Callback;
 import com.example.turisticheska_knizhka.Callbacks.SinglePlaceCallback;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.Helpers.Helper;
+import com.example.turisticheska_knizhka.Helpers.Navigation;
 import com.example.turisticheska_knizhka.Models.NTO100;
 import com.example.turisticheska_knizhka.Models.Place;
-import com.example.turisticheska_knizhka.Helpers.Navigation;
 import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -50,8 +50,6 @@ public class PlaceView extends AppCompatActivity {
 
         placeImageView = findViewById(R.id.placeImageView);
         placeNameTextView = findViewById(R.id.placeNameTextView);
-        phoneNumberTextView = findViewById(R.id.phoneNumberTextView);
-        workingHoursTextView = findViewById(R.id.workingHoursTextView);
         distanceTextView = findViewById(R.id.distanceTextView);
         visitButton = findViewById(R.id.visitButton);
         flagImageView = findViewById(R.id.flagImageView);
@@ -100,8 +98,6 @@ public class PlaceView extends AppCompatActivity {
                 if (place != null) {
                     // Display place details
                     placeNameTextView.setText(place.getName());
-                    phoneNumberTextView.setText(place.getPlacePhoneNumber());
-                    workingHoursTextView.setText(place.getWorkingHours());
                     distanceTextView.setText(String.valueOf(place.getDistance()));
                     if(Helper.checkIsNTO(place)){
                         flagImageView.setVisibility(View.VISIBLE);

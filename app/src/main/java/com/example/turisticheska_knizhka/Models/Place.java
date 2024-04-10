@@ -20,11 +20,9 @@ public class Place {
         // Default constructor required for Firebase deserialization
     }
 
-    public Place(String name, String urlMap, String workingHours, String placePhoneNumber, String imgPath, int distance, DocumentReference userEmail, DocumentReference nto100) {
+    public Place(String name, String urlMap, String imgPath, int distance, DocumentReference userEmail, DocumentReference nto100) {
         setName(name);
         setUrlMap(urlMap);
-        setWorkingHours(workingHours);
-        setPlacePhoneNumber(placePhoneNumber);
         setImgPath(imgPath);
         setDistance(distance);
         setIsFavourite(false);
@@ -33,12 +31,10 @@ public class Place {
         setNto100(nto100);
     }
 
-    public Place(String id, String name, String urlMap, String workingHours, String placePhoneNumber, String imgPath, int distance, boolean isFavourite, boolean isVisited, DocumentReference userEmail, DocumentReference nto100) {
+    public Place(String id, String name, String urlMap, String imgPath, int distance, boolean isFavourite, boolean isVisited, DocumentReference userEmail, DocumentReference nto100) {
         setId(id);
         setName(name);
         setUrlMap(urlMap);
-        setWorkingHours(workingHours);
-        setPlacePhoneNumber(placePhoneNumber);
         setImgPath(imgPath);
         setDistance(distance);
         setIsFavourite(isFavourite);
@@ -57,14 +53,6 @@ public class Place {
 
     public String getUrlMap() {
         return urlMap;
-    }
-
-    public String getWorkingHours() {
-        return workingHours;
-    }
-
-    public String getPlacePhoneNumber() {
-        return placePhoneNumber;
     }
 
     public String getImgPath() {
@@ -102,14 +90,6 @@ public class Place {
 
     public void setUrlMap(String urlMap) {
         this.urlMap = urlMap;
-    }
-
-    public void setWorkingHours(String workingHours) {
-        this.workingHours = workingHours;
-    }
-
-    public void setPlacePhoneNumber(String placePhoneNumber) {
-        this.placePhoneNumber = placePhoneNumber;
     }
 
     public void setImgPath(String imgPath) {

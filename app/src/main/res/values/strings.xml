@@ -30,4 +30,5 @@
         <item>в "профил" можете да редактирате вашия профил. В горната част на екрана ще виждате вашите известия, както и това помощно меню. На добър час и vaya con dios!</item>
         <!-- Add more items for each line of your text -->
     </string-array>
+    <string name="title_activity_add_place">AddPlaceActivity</string>
 </resources>

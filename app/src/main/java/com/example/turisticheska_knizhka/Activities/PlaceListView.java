@@ -1,7 +1,5 @@
 package com.example.turisticheska_knizhka.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,14 +9,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.turisticheska_knizhka.Adapters.NTOAdapter;
+import com.example.turisticheska_knizhka.Adapters.PlaceAdapter;
 import com.example.turisticheska_knizhka.Callbacks.NTO100Callback;
 import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.Helpers.Navigation;
 import com.example.turisticheska_knizhka.Models.NTO100;
 import com.example.turisticheska_knizhka.Models.Place;
-import com.example.turisticheska_knizhka.Adapters.NTOAdapter;
-import com.example.turisticheska_knizhka.Helpers.Navigation;
-import com.example.turisticheska_knizhka.Adapters.PlaceAdapter;
 import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -53,6 +53,15 @@ public class PlaceListView extends AppCompatActivity {
         placeListView = findViewById(R.id.placeListView);
 
         addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open AddPlaceActivity when addButton is clicked
+                Intent addPlaceIntent = new Intent(PlaceListView.this, AddPlaceActivity.class);
+                addPlaceIntent.putExtra("email", email);
+                startActivity(addPlaceIntent);
+            }
+        });
 
 //        // Set OnClickListener for the sort button
 //        sortButton.setOnClickListener(new View.OnClickListener() {

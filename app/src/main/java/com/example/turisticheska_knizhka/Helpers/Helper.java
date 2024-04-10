@@ -20,7 +20,7 @@ public class Helper {
         Log.d("ADD", "nto id: "+userEmail);
         DocumentReference userRef = QueryLocator.getUserRef(userEmail);
         DocumentReference ntoRef = QueryLocator.getNTORef(ntoId);
-        return new Place(name, urlMap, workingHours, placePhoneNumber, imgPath, distance, userRef, ntoRef);
+        return new Place(name, urlMap, imgPath, distance, userRef, ntoRef);
     }
 
     public static void showOnMap(Context context, Object place){
