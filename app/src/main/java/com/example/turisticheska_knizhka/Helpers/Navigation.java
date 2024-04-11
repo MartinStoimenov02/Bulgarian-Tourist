@@ -69,7 +69,7 @@ public class Navigation {
         ((Activity)context).finish();
     }
 
-    private void navigateToPlaceListView(int caseNumber){
+    public void navigateToPlaceListView(int caseNumber){
         Intent intent = new Intent(context, PlaceListView.class);
         intent.putExtra("email", email);
         intent.putExtra("caseNumber", caseNumber);

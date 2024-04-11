@@ -1,6 +1,7 @@
 package com.example.turisticheska_knizhka.Activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -99,6 +100,7 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
                     if(placeName==null || placeName.equals("")){
                         Toast.makeText(AddPlaceActivity.this, "Моля въведете име!", Toast.LENGTH_LONG).show();
                     } else{
+                        ProgressDialog progressDialog = ProgressDialog.show(AddPlaceActivity.this, "Моля изчакайте", "Добавяне на дестинацията...", true, false);
                         getImage(urlMap, placeName, email, description);
                     }
                 }
@@ -212,7 +214,7 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
                 DocumentReference userRef = QueryLocator.getUserRef(email);
 
                 Place newPlace = new Place(
-                        name, urlMap, imgPath, 0, userRef, ntoRef, description
+                        name, urlMap, imgPath, -1, userRef, ntoRef, description
                 );
                 QueryLocator.addPlaceToMyPlaces(newPlace);
                 navigateToNewPlace(newPlace.getId());

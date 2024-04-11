@@ -98,7 +98,7 @@ public class QueryLocator {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
         // Query the 'places' collection to get places associated with the provided user reference
-        firestore.collection("nto100")
+        firestore.collection("nto100").whereEqualTo("isActive", true)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<NTO100> nto100s = new ArrayList<>();

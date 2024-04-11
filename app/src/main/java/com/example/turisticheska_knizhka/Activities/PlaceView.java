@@ -1,8 +1,10 @@
 package com.example.turisticheska_knizhka.Activities;
 
+import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -82,6 +84,20 @@ public class PlaceView extends AppCompatActivity {
                 //
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Set result to canceled and finish activity
+                setResult(RESULT_CANCELED);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     private void showMyPlace(String placeId, boolean isVisited){
         navigationMenu(R.id.action_my_places);
@@ -223,8 +239,9 @@ public class PlaceView extends AppCompatActivity {
                     visitButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Place place = Helper.createPlaceFromNTO(nto100.getName() , nto100.getUrlMap(), nto100.getWorkingHours(), nto100.getPlacePhoneNumber(), nto100.getImgPath(), nto100.getDistance(), email, nto100.getId(), nto100.getDescription());
+                            Place place = Helper.createPlaceFromNTO(nto100.getName() , nto100.getUrlMap(), nto100.getImgPath(), nto100.getDistance(), email, nto100.getId(), nto100.getDescription());
                             QueryLocator.addANewPlace(place, nto100.getId());
+                            Toast.makeText(PlaceView.this, "Мястото е добавено успешно!", Toast.LENGTH_LONG).show();
                             visitButton.setEnabled(false);
                             visitButton.setVisibility(View.INVISIBLE);
                         }
@@ -262,6 +279,7 @@ public class PlaceView extends AppCompatActivity {
     }
 
     public void refreshDistance(Object obj){
+        ProgressDialog progressDialog = ProgressDialog.show(PlaceView.this, "Моля изчакайте", "Изчисляване на разстоянието...", true, false);
         Helper.getCurrentLocation(PlaceView.this, new com.example.turisticheska_knizhka.Callbacks.LocationCallback() {
             @Override
             public void onLocationResult(Location location) {
@@ -271,18 +289,22 @@ public class PlaceView extends AppCompatActivity {
                         Place place = (Place) obj;
                         // Calculate distance between current location and destination
                         distance = (int) Helper.calculateDistance(place.getUrlMap(), location);
-                        if (distance >= 0) {
+                        Log.d("DISTANCE", "dst: "+distance);
+                        if (distance != -1) {
                                 // Display distance
                                 place.setDistance(distance);
+                                progressDialog.dismiss();
                                 QueryLocator.updatePlaceDistance(place, distance);
                         }
                     }else if (obj instanceof NTO100){
                         NTO100 nto100 = (NTO100) obj;
                         // Calculate distance between current location and destination
                         distance = (int) Helper.calculateDistance(nto100.getUrlMap(), location);
+                        Log.d("DISTANCE", "dst: "+distance);
                         if (distance != -1) {
                             // Display distance
                             nto100.setDistance(distance);
+                            progressDialog.dismiss();
                             QueryLocator.updatePlaceDistance(nto100, distance);
                         }
                     }
@@ -307,6 +329,8 @@ public class PlaceView extends AppCompatActivity {
                 QueryLocator.updatePlaceVisitation(place);
                 visitButton.setVisibility(View.INVISIBLE);
                 Toast.makeText(PlaceView.this, "Успешно посетихте това място", Toast.LENGTH_LONG).show();
+                Navigation nav = new Navigation(email, PlaceView.this);
+                nav.navigateToPlaceListView(1);
             }else{
                 Toast.makeText(PlaceView.this, "Трябва да сте на по-малко от 500 метра!", Toast.LENGTH_LONG).show();
             }

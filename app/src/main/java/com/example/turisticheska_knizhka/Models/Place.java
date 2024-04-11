@@ -6,8 +6,6 @@ public class Place {
     private String id;
     private String name;
     private String urlMap;
-    private String workingHours;
-    private String placePhoneNumber;
     private String imgPath;
     private int distance;
     private boolean isFavourite;
@@ -17,9 +15,7 @@ public class Place {
     private String description;
 
     // Default constructor
-    public Place() {
-        // Default constructor required for Firebase deserialization
-    }
+    public Place() {}
 
     public Place(String name, String urlMap, String imgPath, int distance, DocumentReference userEmail, DocumentReference nto100, String description) {
         setName(name);
@@ -33,18 +29,6 @@ public class Place {
         setDescription(description);
     }
 
-    public Place(String id, String name, String urlMap, String imgPath, int distance, boolean isFavourite, boolean isVisited, DocumentReference userEmail, DocumentReference nto100) {
-        setId(id);
-        setName(name);
-        setUrlMap(urlMap);
-        setImgPath(imgPath);
-        setDistance(distance);
-        setIsFavourite(isFavourite);
-        setIsVisited(isVisited);
-        setUserEmail(userEmail);
-        setNto100(nto100);
-    }
-
     // Getters
     public String getId() {
         return id;
@@ -52,31 +36,24 @@ public class Place {
     public String getName() {
         return name;
     }
-
     public String getUrlMap() {
         return urlMap;
     }
-
     public String getImgPath() {
         return imgPath;
     }
-
     public int getDistance() {
         return distance;
     }
-
     public boolean getIsFavourite() {
         return isFavourite;
     }
-
     public boolean getIsVisited() {
         return isVisited;
     }
-
     public DocumentReference getUserEmail() {
         return userEmail;
     }
-
     public DocumentReference getNto100() {
         return nto100;
     }
@@ -88,35 +65,27 @@ public class Place {
     public void setId(String id) {
         this.id = id;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public void setUrlMap(String urlMap) {
         this.urlMap = urlMap;
     }
-
     public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
     }
-
     public void setDistance(int distance) {
         this.distance = distance;
     }
-
     public void setIsFavourite(boolean favourite) {
         isFavourite = favourite;
     }
-
     public void setIsVisited(boolean visited) {
         isVisited = visited;
     }
-
     public void setUserEmail(DocumentReference userEmail) {
         this.userEmail = userEmail;
     }
-
     public void setNto100(DocumentReference nto100) {
         this.nto100 = nto100;
     }

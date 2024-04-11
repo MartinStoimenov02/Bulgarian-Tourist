@@ -1,11 +1,5 @@
 package com.example.turisticheska_knizhka.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricPrompt;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -31,6 +25,13 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+
+import com.bumptech.glide.Glide;
 import com.example.turisticheska_knizhka.DataBase.LocalDatabase;
 import com.example.turisticheska_knizhka.Helpers.PasswordHasher;
 import com.example.turisticheska_knizhka.R;
@@ -39,8 +40,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.example.turisticheska_knizhka.DataBase.LocalDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executor;
@@ -54,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private Button signupButton;
     private CheckBox showPasswordCheckBox;
     private FirebaseFirestore firestore;
-    private int[] imageResources = {R.drawable.bg_mountin, R.drawable.road};
-
     final LocalDatabase localDatabase = new LocalDatabase(this);
 
     @Override
@@ -376,20 +382,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setImageRandomly() {
-        // Get a random index from the imageResources array
-        int randomIndex = new Random().nextInt(imageResources.length);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Construct the URL for the search request
+                    URL url = new URL("https://www.googleapis.com/customsearch/v1?key=" +
+                            "AIzaSyBSrFIVWfPGscGFskb3s3tl1crSYL5lq9A" + "&cx=" + "8662ccaade9c34971" + "&searchType=image&q=" + "обекти в българия");
 
-        // Set the image resource of the ImageView to the randomly selected image
-        imageView.setImageResource(imageResources[randomIndex]);
+                    // Open a connection to the URL
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+
+                    // Read the response
+                    InputStream inputStream = connection.getInputStream();
+                    StringBuilder responseBuilder = new StringBuilder();
+                    int data;
+                    while ((data = inputStream.read()) != -1) {
+                        responseBuilder.append((char) data);
+                    }
+                    inputStream.close();
+
+                    // Parse JSON response
+                    JSONObject jsonResponse = new JSONObject(responseBuilder.toString());
+                    JSONArray items = jsonResponse.getJSONArray("items");
+
+                    // Get a random image URL from the search results
+                    Random random = new Random();
+                    int randomIndex = random.nextInt(items.length());
+                    String imageUrl = items.getJSONObject(randomIndex).getString("link");
+
+                    // Load the image using Glide on the main UI thread
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Glide.with(MainActivity.this)
+                                    .load(imageUrl)
+                                    .placeholder(R.drawable.placeholder_image)
+                                    .error(R.drawable.error_image)
+                                    .into(imageView);
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
 
-//    private void disableEditText(EditText editText) {
-//        editText.setFocusable(false);
-//        editText.setEnabled(false);
-//        editText.setCursorVisible(false);
-//        editText.setKeyListener(null);
-//        //editText.setBackgroundColor(Color.TRANSPARENT);
-//    }
 
     private void setupKeyboardListener() {
         final View mainLayout = findViewById(R.id.loginLayout); // Change to your main layout id

@@ -1,38 +1,40 @@
 package com.example.turisticheska_knizhka.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.text.SpannableString;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.Helpers.Navigation;
 import com.example.turisticheska_knizhka.Models.Place;
 import com.example.turisticheska_knizhka.Models.User;
-import com.example.turisticheska_knizhka.Helpers.Navigation;
 import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.firebase.firestore.DocumentReference;
 
 public class HomeActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_PLACE_LIST = 1;
     private String email;
     private FirebaseFirestore db;
     private List<Place> placeList;
@@ -47,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     private int points;
     private int level;
     List<User> topUsers;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +78,13 @@ public class HomeActivity extends AppCompatActivity {
         showVisitedPlaces.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = ProgressDialog.show(HomeActivity.this, "Моля изчакайте", "Зареждане на списък...", true, false);
                 Intent intent = new Intent(HomeActivity.this, PlaceListView.class);
                 intent.putExtra("email", email);
                 intent.putExtra("caseNumber", 3);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
+                //startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_PLACE_LIST);
             }
         });
 
@@ -92,6 +97,21 @@ public class HomeActivity extends AppCompatActivity {
         navigation.topMenu(topMenu);
         getLinkedVisitedPlaces();
         fetchTopUsers();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PLACE_LIST) {
+            // Check if the result is OK
+            if (resultCode == RESULT_OK) {
+                // Do something when the activity returns successfully
+            }
+            // Dismiss the progress dialog here
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
     }
 
     private void displayPointsAndLevel() {

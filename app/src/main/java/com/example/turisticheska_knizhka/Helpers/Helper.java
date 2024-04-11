@@ -26,7 +26,7 @@ public class Helper {
         return place.getNto100() != null;
     }
 
-    public static Place createPlaceFromNTO(String name, String urlMap, String workingHours, String placePhoneNumber, String imgPath, int distance, String userEmail, String ntoId, String description){
+    public static Place createPlaceFromNTO(String name, String urlMap, String imgPath, int distance, String userEmail, String ntoId, String description){
         Log.d("ADD", "nto id: "+ntoId);
         Log.d("ADD", "nto id: "+userEmail);
         DocumentReference userRef = QueryLocator.getUserRef(userEmail);
@@ -79,8 +79,8 @@ public class Helper {
         // Create a location request
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(1000) // Update location every 1 minute
-                .setFastestInterval(500); // Fastest interval for location updates
+                .setInterval(1) // Update location every 1 minute
+                .setFastestInterval(1); // Fastest interval for location updates
 
         // Create a location callback
         LocationCallback mLocationCallback = new LocationCallback() {
