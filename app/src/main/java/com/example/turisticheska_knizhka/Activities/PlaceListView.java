@@ -95,7 +95,7 @@ public class PlaceListView extends AppCompatActivity {
 
     private void listMyPlaces() {
         navigationMenu(R.id.action_my_places);
-        QueryLocator.getMyPlaces(email, new PlacesCallback() {
+        QueryLocator.getMyUnvisitedPlaces(email, new PlacesCallback() {
             @Override
             public void onPlacesLoaded(List<Place> places) {
                 // Update the filteredPlaces list

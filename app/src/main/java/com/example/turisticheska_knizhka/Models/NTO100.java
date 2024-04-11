@@ -9,8 +9,9 @@ public class NTO100 {
     public String imgPath;
     public int distance;
     public String numberInNationalList;
+    public String description;
     public NTO100(){}
-    public NTO100(String name, String urlMap, String workingHours, String placePhoneNumber, String imgPath, int distance, String numberInNationalList){
+    public NTO100(String name, String urlMap, String workingHours, String placePhoneNumber, String imgPath, int distance, String numberInNationalList, String description){
         this.name = name;
         this.urlMap = urlMap;
         this.workingHours = workingHours;
@@ -18,9 +19,10 @@ public class NTO100 {
         this.imgPath = imgPath;
         this.distance = distance;
         this.numberInNationalList = numberInNationalList;
+        this.description = description;
     }
 
-    public NTO100(String id, String name, String urlMap, String workingHours, String placePhoneNumber, String imgPath, int distance, String numberInNationalList){
+    public NTO100(String id, String name, String urlMap, String workingHours, String placePhoneNumber, String imgPath, int distance, String numberInNationalList, String description){
         this.id = id;
         this.name = name;
         this.urlMap = urlMap;
@@ -29,6 +31,7 @@ public class NTO100 {
         this.imgPath = imgPath;
         this.distance = distance;
         this.numberInNationalList = numberInNationalList;
+        this.description = description;
     }
 
     public String getId() {
@@ -62,6 +65,9 @@ public class NTO100 {
     public String getNumberInNationalList() {
         return numberInNationalList;
     }
+    public String getDescription() {
+        return description;
+    }
 
     // Setter methods
     public void setId(String id) {
@@ -94,5 +100,8 @@ public class NTO100 {
 
     public void setNumberInNationalList(String numberInNationalList) {
         this.numberInNationalList = numberInNationalList;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

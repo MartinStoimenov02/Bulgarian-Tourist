@@ -29,6 +29,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
+    <!-- Bottom navigation view -->
+
     <TextView
         android:id="@+id/placeNameTextView"
         android:layout_width="match_parent"
@@ -38,12 +40,11 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/detailsLayout"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.972" />
-
-    <!-- Bottom navigation view -->
+        app:layout_constraintVertical_bias="0.802"
+        tools:layout_editor_absoluteX="0dp" />
 
     <LinearLayout
-        android:id="@+id/detailsLayout"
+        android:id="@+id/distanceLayout"
         android:layout_width="374dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="288dp"
@@ -71,6 +72,34 @@
 
 
     <LinearLayout
+        android:id="@+id/detailsLayout"
+        android:layout_width="374dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/distanceLayout">
+
+        <TextView
+            android:id="@+id/descriptionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Описание: "
+            android:textSize="20sp"
+            android:textStyle="italic|bold" />
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="268dp"
         android:layout_height="wrap_content"
@@ -85,10 +114,10 @@
             android:id="@+id/showOnMapButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:backgroundTint="@null"
             android:background="@drawable/rounded_button_orange"
             android:text="Покажи на картата"
-            android:textColor="@color/white"
-            app:backgroundTint="@null" />
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/visitButton"
@@ -111,7 +140,7 @@
         android:id="@+id/flagImageView"
         android:layout_width="40dp"
         android:layout_height="29dp"
-        android:src="@drawable/bulgarian_flag"
+        android:src="@drawable/flag_black_border"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/placeImageView"
         app:layout_constraintEnd_toEndOf="@+id/placeImageView" />

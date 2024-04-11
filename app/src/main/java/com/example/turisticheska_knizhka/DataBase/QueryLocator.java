@@ -27,8 +27,28 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryLocator {
+    public static void getAllMyPlaces(String email, PlacesCallback callback) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        DocumentReference userRef = getUserRef(email);
 
-    public static void getMyPlaces(String email, PlacesCallback callback) {
+        // Query the 'places' collection to get places associated with the provided user reference
+        firestore.collection("places")
+                .whereEqualTo("userEmail", userRef)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Place> places = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Place place = document.toObject(Place.class);
+                        place.setId(document.getId());
+                        //place.setFavourite(document.getBoolean("isFavourite"));
+                        places.add(place);
+                    }
+                    callback.onPlacesLoaded(places); // Return the list of filtered places
+                })
+                .addOnFailureListener(callback::onError); // Return any database errors
+    }
+
+    public static void getMyUnvisitedPlaces(String email, PlacesCallback callback) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         DocumentReference userRef = getUserRef(email);
 
@@ -265,6 +285,29 @@ public class QueryLocator {
                         }
                     }
                 });
+    }
+
+    public static void updatePlaceDistance(Object obj, int distance){
+        if(obj instanceof Place){
+            Place place = (Place) obj;
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("places").document(place.getId()).update("distance", distance)
+                   .addOnSuccessListener(aVoid -> {})
+                   .addOnFailureListener(e -> {});
+        }else if (obj instanceof NTO100){
+            NTO100 nto100 = (NTO100) obj;
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("nto100").document(nto100.getId()).update("distance", distance)
+                    .addOnSuccessListener(aVoid -> {})
+                    .addOnFailureListener(e -> {});
+        }
+    }
+
+    public static void updatePlaceVisitation(Place place){
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("places").document(place.getId()).update("isVisited", place.getIsVisited())
+                .addOnSuccessListener(aVoid -> {})
+                .addOnFailureListener(e -> {});
     }
 }
 

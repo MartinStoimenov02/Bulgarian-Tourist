@@ -5,16 +5,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.turisticheska_knizhka.Callbacks.NTO100Callback;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.Helpers.Navigation;
 import com.example.turisticheska_knizhka.Models.NTO100;
 import com.example.turisticheska_knizhka.Models.Place;
 import com.example.turisticheska_knizhka.R;
@@ -27,6 +30,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 
 import org.json.JSONArray;
@@ -41,13 +45,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class AddPlaceActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private GoogleMap mMap;
     private ActivityAddPlaceBinding binding;
     private String urlMap;
     EditText placeEditText;
+    EditText placeDescription;
     private Button addButton;
+    private static BottomNavigationView bottomNavigationView;
     String email;
 
 
@@ -58,12 +64,23 @@ public class AddPlaceActivity extends FragmentActivity implements OnMapReadyCall
         binding = ActivityAddPlaceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         placeEditText = findViewById(R.id.placeEditText);
+        placeDescription = findViewById(R.id.placeDescription);
         addButton = findViewById(R.id.addButton);
 
         Intent intent = getIntent();
         if (intent != null) {
             email = intent.getStringExtra("email");
         }
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_my_places);
+        Navigation navigation = new Navigation(email, AddPlaceActivity.this);
+        navigation.bottomNavigation(bottomNavigationView);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -77,11 +94,12 @@ public class AddPlaceActivity extends FragmentActivity implements OnMapReadyCall
                     Toast.makeText(AddPlaceActivity.this, "Моля изберете локация!", Toast.LENGTH_LONG).show();
                 }else{
                     String placeName = String.valueOf(placeEditText.getText());
+                    String description = String.valueOf(placeDescription.getText());
                     Log.d("PLACENAME", "place: "+placeName);
                     if(placeName==null || placeName.equals("")){
                         Toast.makeText(AddPlaceActivity.this, "Моля въведете име!", Toast.LENGTH_LONG).show();
                     } else{
-                        getImage(urlMap, placeName, email);
+                        getImage(urlMap, placeName, email, description);
                     }
                 }
             }
@@ -133,7 +151,7 @@ public class AddPlaceActivity extends FragmentActivity implements OnMapReadyCall
         Log.d("URL", urlMap);
     }
 
-    public void getImage(String urlMap, String name, String email) {
+    public void getImage(String urlMap, String name, String email, String description) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -166,7 +184,7 @@ public class AddPlaceActivity extends FragmentActivity implements OnMapReadyCall
                     String imageUrl = items.getJSONObject(randomIndex).getString("link");
 
                     Log.d("IMAGE", "Random Image URL: " + imageUrl);
-                    addNewPlace(urlMap, name, email, imageUrl);
+                    addNewPlace(urlMap, name, email, imageUrl, description);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -177,7 +195,7 @@ public class AddPlaceActivity extends FragmentActivity implements OnMapReadyCall
         }).start();
     }
 
-    private void addNewPlace(String urlMap, String name, String email, String imgPath){
+    private void addNewPlace(String urlMap, String name, String email, String imgPath, String description){
         QueryLocator.getNto100(new NTO100Callback() {
             @Override
             public void onNTO100Loaded(List<NTO100> nto100s) {
@@ -194,7 +212,7 @@ public class AddPlaceActivity extends FragmentActivity implements OnMapReadyCall
                 DocumentReference userRef = QueryLocator.getUserRef(email);
 
                 Place newPlace = new Place(
-                        name, urlMap, imgPath, 0, userRef, ntoRef
+                        name, urlMap, imgPath, 0, userRef, ntoRef, description
                 );
                 QueryLocator.addPlaceToMyPlaces(newPlace);
                 navigateToNewPlace(newPlace.getId());
@@ -213,4 +231,14 @@ public class AddPlaceActivity extends FragmentActivity implements OnMapReadyCall
         startActivity(placeViewIntent);
         finishAffinity();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed(); // Go back when the back arrow in the toolbar is clicked
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

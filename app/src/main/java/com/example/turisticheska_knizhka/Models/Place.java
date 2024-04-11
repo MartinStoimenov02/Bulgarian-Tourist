@@ -14,13 +14,14 @@ public class Place {
     private boolean isVisited;
     private DocumentReference userEmail; // Changed type to DocumentReference
     private DocumentReference nto100; // Changed type to DocumentReference
+    private String description;
 
     // Default constructor
     public Place() {
         // Default constructor required for Firebase deserialization
     }
 
-    public Place(String name, String urlMap, String imgPath, int distance, DocumentReference userEmail, DocumentReference nto100) {
+    public Place(String name, String urlMap, String imgPath, int distance, DocumentReference userEmail, DocumentReference nto100, String description) {
         setName(name);
         setUrlMap(urlMap);
         setImgPath(imgPath);
@@ -29,6 +30,7 @@ public class Place {
         setIsVisited(false);
         setUserEmail(userEmail);
         setNto100(nto100);
+        setDescription(description);
     }
 
     public Place(String id, String name, String urlMap, String imgPath, int distance, boolean isFavourite, boolean isVisited, DocumentReference userEmail, DocumentReference nto100) {
@@ -78,6 +80,9 @@ public class Place {
     public DocumentReference getNto100() {
         return nto100;
     }
+    public String getDescription() {
+        return description;
+    }
 
     // Setters
     public void setId(String id) {
@@ -114,5 +119,8 @@ public class Place {
 
     public void setNto100(DocumentReference nto100) {
         this.nto100 = nto100;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.turisticheska_knizhka.Activities;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,9 +30,8 @@ import java.util.List;
 public class PlaceView extends AppCompatActivity {
     ImageView placeImageView;
     TextView placeNameTextView;
-    TextView phoneNumberTextView;
-    TextView workingHoursTextView;
     TextView distanceTextView;
+    TextView descriptionTextView;
     Button visitButton;
     Button showOnMapButton;
     ImageView flagImageView;
@@ -55,6 +55,7 @@ public class PlaceView extends AppCompatActivity {
         flagImageView = findViewById(R.id.flagImageView);
         favouriteButton = findViewById(R.id.favouriteButton);
         showOnMapButton = findViewById(R.id.showOnMapButton);
+        descriptionTextView = findViewById(R.id.descriptionTextView);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,12 +67,6 @@ public class PlaceView extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
-        Navigation navigation = new Navigation(email, PlaceView.this);
-        navigation.bottomNavigation(bottomNavigationView);
-        navigation.bottomNavigation(bottomNavigationView);
 
         switch (caseNumber){
             case 1:
@@ -89,6 +84,7 @@ public class PlaceView extends AppCompatActivity {
     }
 
     private void showMyPlace(String placeId, boolean isVisited){
+        navigationMenu(R.id.action_my_places);
         if(isVisited)visitButton.setVisibility(View.INVISIBLE);
         else visitButton.setText("Посети");
 
@@ -96,9 +92,12 @@ public class PlaceView extends AppCompatActivity {
             @Override
             public void onPlaceLoaded(Place place) {
                 if (place != null) {
+                    refreshDistance(place);
                     // Display place details
                     placeNameTextView.setText(place.getName());
-                    distanceTextView.setText(String.valueOf(place.getDistance()));
+                    String formatedDistance = formatDistance(place.getDistance());
+                    distanceTextView.setText(formatedDistance);
+                    descriptionTextView.setText(place.getDescription());
                     if(Helper.checkIsNTO(place)){
                         flagImageView.setVisibility(View.VISIBLE);
                     } else {
@@ -119,6 +118,15 @@ public class PlaceView extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Helper.showOnMap(PlaceView.this, place);
+                        }
+                    });
+
+                    visitButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Get current location
+                            visitPlace(place);
+                            //refreshDistance(place, false);
                         }
                     });
                 } else {
@@ -159,6 +167,7 @@ public class PlaceView extends AppCompatActivity {
     }
 
     private void show100ntos(String placeId){
+        navigationMenu(R.id.action_nto100);
         Log.d("NTO100_ID", "id: "+placeId);
         visitButton.setText("Добави за посещение");
         QueryLocator.getNTO100ById(placeId, new SingleNTO100Callback() {
@@ -166,11 +175,12 @@ public class PlaceView extends AppCompatActivity {
             public void onNTOLoaded(NTO100 nto100) {
                 // Handle the loaded NTO100 object
                 if (nto100 != null) {
+                    refreshDistance(nto100);
                     // Display place details
                     placeNameTextView.setText(nto100.getNumberInNationalList()+". "+nto100.getName());
-                    phoneNumberTextView.setText(nto100.getPlacePhoneNumber());
-                    workingHoursTextView.setText(nto100.getWorkingHours());
-                    distanceTextView.setText(String.valueOf(nto100.getDistance()));
+                    String formatedDistance = formatDistance(nto100.getDistance());
+                    distanceTextView.setText(formatedDistance);
+                    descriptionTextView.setText(nto100.getDescription());
                     flagImageView.setVisibility(View.VISIBLE);
                     favouriteButton.setVisibility(View.INVISIBLE);
 
@@ -182,7 +192,7 @@ public class PlaceView extends AppCompatActivity {
                             .into(placeImageView);
 
                     //check if the nto already added to my places
-                    QueryLocator.getMyPlaces(email, new PlacesCallback() {
+                    QueryLocator.getAllMyPlaces(email, new PlacesCallback() {
                         @Override
                         public void onPlacesLoaded(List<Place> places) {
                             // Update the filteredPlaces list
@@ -213,7 +223,7 @@ public class PlaceView extends AppCompatActivity {
                     visitButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Place place = Helper.createPlaceFromNTO(nto100.getName() , nto100.getUrlMap(), nto100.getWorkingHours(), nto100.getPlacePhoneNumber(), nto100.getImgPath(), nto100.getDistance(), email, nto100.getId());
+                            Place place = Helper.createPlaceFromNTO(nto100.getName() , nto100.getUrlMap(), nto100.getWorkingHours(), nto100.getPlacePhoneNumber(), nto100.getImgPath(), nto100.getDistance(), email, nto100.getId(), nto100.getDescription());
                             QueryLocator.addANewPlace(place, nto100.getId());
                             visitButton.setEnabled(false);
                             visitButton.setVisibility(View.INVISIBLE);
@@ -239,5 +249,66 @@ public class PlaceView extends AppCompatActivity {
                 Toast.makeText(PlaceView.this, "Failed to fetch NTO100 data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String formatDistance(int distance){
+        int formatedDistance = 0;
+        if(distance>=1000){
+            formatedDistance = (distance/1000);
+            return formatedDistance+" км.";
+        }else{
+            return distance+" м.";
+        }
+    }
+
+    public void refreshDistance(Object obj){
+        Helper.getCurrentLocation(PlaceView.this, new com.example.turisticheska_knizhka.Callbacks.LocationCallback() {
+            @Override
+            public void onLocationResult(Location location) {
+                int distance=0;
+                if (location != null) {
+                    if(obj instanceof Place){
+                        Place place = (Place) obj;
+                        // Calculate distance between current location and destination
+                        distance = (int) Helper.calculateDistance(place.getUrlMap(), location);
+                        if (distance >= 0) {
+                                // Display distance
+                                place.setDistance(distance);
+                                QueryLocator.updatePlaceDistance(place, distance);
+                        }
+                    }else if (obj instanceof NTO100){
+                        NTO100 nto100 = (NTO100) obj;
+                        // Calculate distance between current location and destination
+                        distance = (int) Helper.calculateDistance(nto100.getUrlMap(), location);
+                        if (distance != -1) {
+                            // Display distance
+                            nto100.setDistance(distance);
+                            QueryLocator.updatePlaceDistance(nto100, distance);
+                        }
+                    }
+
+                }
+                String formatedString = formatDistance(distance);
+                distanceTextView.setText(formatedString);
+            }
+        });
+    }
+
+    private void navigationMenu(int nav){
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(nav);
+        Navigation navigation = new Navigation(email, PlaceView.this);
+        navigation.bottomNavigation(bottomNavigationView);
+    }
+
+    private void visitPlace(Place place){
+            if(place.getDistance()<500){
+                place.setIsVisited(true);
+                QueryLocator.updatePlaceVisitation(place);
+                visitButton.setVisibility(View.INVISIBLE);
+                Toast.makeText(PlaceView.this, "Успешно посетихте това място", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(PlaceView.this, "Трябва да сте на по-малко от 500 метра!", Toast.LENGTH_LONG).show();
+            }
     }
 }
