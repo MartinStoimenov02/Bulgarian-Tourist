@@ -27,73 +27,50 @@ public class User {
 
     // Getter and setter methods...
 
-    // Setter and getter for name
     public String getName() {
         return name;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public String getPhone() {
+        return phone;
+    }
+    public int getPoints() {
+        return points;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public boolean getRememberMe() {
+        return rememberMe;
+    }
+    public boolean getLoginFirst() {
+        return loginFirst;
+    }
+    public boolean getNotifications() {
+        return notifications;
     }
 
     public void setName(String name) {
         this.name = name;
     }
-
-    // Setter and getter for email
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    // Setter and getter for phone
-    public String getPhone() {
-        return phone;
-    }
-
+    public void setEmail(String email) {this.email = email;}
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    public int getPoints() {
-        return points;
-    }
-
     public void setPoints(int points) {
         this.points = points;
     }
-
-    // Setter and getter for password
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
-    // Setter and getter for rememberMe
-    public boolean isRememberMe() {
-        return rememberMe;
-    }
-
     public void setRememberMe(boolean rememberMe) {
         this.rememberMe = rememberMe;
     }
-
-    // Setter and getter for notifications
-    public boolean isNotifications() {
-        return notifications;
-    }
-
     public void setNotifications(boolean notifications) {
         this.notifications = notifications;
     }
-
-    // Setter and getter for loginFirst
-    public boolean isLoginFirst() {
-        return loginFirst;
-    }
-
     public void setLoginFirst(boolean loginFirst) {
         this.loginFirst = loginFirst;
     }

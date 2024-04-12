@@ -15,7 +15,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Детайли" />
+        app:title="Добавяне на дестинация" />
 
     <EditText
         android:id="@+id/placeEditText"

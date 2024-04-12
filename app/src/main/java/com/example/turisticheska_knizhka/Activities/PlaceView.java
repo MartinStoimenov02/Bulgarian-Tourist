@@ -305,7 +305,7 @@ public class PlaceView extends AppCompatActivity {
                             // Display distance
                             nto100.setDistance(distance);
                             progressDialog.dismiss();
-                            QueryLocator.updatePlaceDistance(nto100, distance);
+                            //QueryLocator.updatePlaceDistance(nto100, distance);
                         }
                     }
 

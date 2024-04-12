@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/orange"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Изтриване на профил" />
+
+    <TextView
+        android:id="@+id/textViewWarning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:gravity="center"
+        android:text="Предупреждение: Изтриването на Вашият профил ще го премахне от системата и ще изтрие всички свързани към него посетени и непосетени дестинации!"
+        android:textColor="@color/red"
+        android:textSize="20dp"
+        android:textStyle="bold|italic" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewWarning"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="Въведете паролата си, за да потвърдите"
+        android:inputType="textPassword"
+        android:textColor="@color/black" />
+
+    <CheckBox
+        android:id="@+id/checkBoxAccept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:buttonTint="@color/orange"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Разбирам и потвърждавам изтриването"
+        android:layout_below="@id/editTextPassword"
+        android:textColor="@color/red"
+        android:textStyle="bold|italic"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/buttonDeleteProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Изтрий профила"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/rounded_button_red"
+        android:layout_below="@id/checkBoxAccept"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Bottom navigation view -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_navigation_menu" />
+</RelativeLayout>

@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -46,6 +45,29 @@ public class LocalDatabase extends SQLiteOpenHelper {
         db.insert(TABLE_EMAILS, null, values);
         db.close();
     }
+
+    public void updatePassword(String email, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_PH_NO, newPassword);
+
+        // Define the WHERE clause to specify which record(s) to update
+        String whereClause = KEY_NAME + " = ?";
+        String[] whereArgs = { email };
+
+        // Update the record(s) that match the email
+        int rowsAffected = db.update(TABLE_EMAILS, values, whereClause, whereArgs);
+
+        // Check if any rows were affected
+        if (rowsAffected > 0) {
+            Log.d("LocalDatabase", "Password updated successfully for email: " + email);
+        } else {
+            Log.e("LocalDatabase", "Failed to update password for email: " + email);
+        }
+
+        db.close();
+    }
+
 
     // Вземане на всички Потребители
     public List<String> getAllEmails() {

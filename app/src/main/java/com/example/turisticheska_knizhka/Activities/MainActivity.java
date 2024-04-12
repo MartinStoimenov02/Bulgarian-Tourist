@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -32,14 +31,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.turisticheska_knizhka.Callbacks.SingleUserCallback;
 import com.example.turisticheska_knizhka.DataBase.LocalDatabase;
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.Helpers.PasswordHasher;
+import com.example.turisticheska_knizhka.Models.User;
 import com.example.turisticheska_knizhka.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -208,36 +207,31 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void checkForExistingUser(String emailText, String hashPasswordText) {
-        firestore = FirebaseFirestore.getInstance();
-        firestore.collection("users")
-                .whereEqualTo("email", emailText)
-                .whereEqualTo("password", hashPasswordText)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().size() != 0) {
-                                if(!savedEmailExists(emailText)){
-                                    activateFingerPrintForEmail(emailText, hashPasswordText);
-                                }
-                                else{
-                                    checkIsFirstLogin(emailText);
-                                }
-                            } else {
-                                // User with the given email and password does not exist
-                                // Show error or handle as per your requirement
-                                if(savedEmailExists(emailText)){localDatabase.deleteEmail(emailText);}
-                                notifyUser("Потребител с този имейл вече не съществува! Изберете друг!");
-                                password.setError("потребител с такъв имейл или парола не същестува!");
-                            }
-                        } else {
-                            // Error occurred while fetching data
-                            Log.e("Firestore", "Error getting documents: ", task.getException());
-                        }
+    private void checkForExistingUser(String emailText, String hashPasswordText){
+        QueryLocator.checkForExistingUser(emailText, hashPasswordText, new SingleUserCallback() {
+
+            @Override
+            public void onUserLoaded(User usr) {
+                if (usr!=null) {
+                    if (!savedEmailExists(emailText)) {
+                        activateFingerPrintForEmail(emailText, hashPasswordText);
+                    } else {
+                        checkIsFirstLogin(emailText);
                     }
-                });
+                } else {
+                    // User with the given email and password does not exist
+                    // Show error or handle as per your requirement
+                    if(savedEmailExists(emailText)){localDatabase.deleteEmail(emailText);}
+                    notifyUser("Потребител с този имейл вече не съществува! Изберете друг!");
+                    password.setError("потребител с такъв имейл или парола не същестува!");
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
     }
 
     private void activateFingerPrintForEmail(String email, String password) {
