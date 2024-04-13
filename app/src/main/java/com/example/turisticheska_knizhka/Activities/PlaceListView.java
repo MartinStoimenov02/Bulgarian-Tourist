@@ -107,10 +107,7 @@ public class PlaceListView extends AppCompatActivity {
             }
 
             @Override
-            public void onError(Exception e) {
-                // Handle error
-                Toast.makeText(PlaceListView.this, "Error loading places", Toast.LENGTH_SHORT).show();
-            }
+            public void onError(Exception e) {}
         });
     }
 
@@ -147,10 +144,7 @@ public class PlaceListView extends AppCompatActivity {
             }
 
             @Override
-            public void onError(Exception e) {
-                // Handle error
-                Toast.makeText(PlaceListView.this, "Error loading places", Toast.LENGTH_SHORT).show();
-            }
+            public void onError(Exception e) {}
         });
     }
 
@@ -169,10 +163,7 @@ public class PlaceListView extends AppCompatActivity {
             }
 
             @Override
-            public void onError(Exception e) {
-                // Handle error
-                Toast.makeText(PlaceListView.this, "Error loading places", Toast.LENGTH_SHORT).show();
-            }
+            public void onError(Exception e) {}
         });
     }
 

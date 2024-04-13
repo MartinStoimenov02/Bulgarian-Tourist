@@ -48,14 +48,6 @@ public class Helper {
         // Create an Intent with ACTION_VIEW to open the URL in a web browser
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlMap));
         context.startActivity(intent);
-        // Verify that the intent will resolve to an activity
-//        if (intent.resolveActivity(context.getPackageManager()) != null) {
-//            // Start the activity if there is an app available to handle the intent
-//            context.startActivity(intent);
-//        } else {
-//            // If no app is available to handle the intent, display a toast or handle it accordingly
-//            Toast.makeText(context, "No app available to handle this action", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     public static boolean isLocationEnabled(Context context) {

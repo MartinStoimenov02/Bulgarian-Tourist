@@ -148,17 +148,11 @@ public class PlaceView extends AppCompatActivity {
                             //refreshDistance(place, false);
                         }
                     });
-                } else {
-                    // Handle case where place is null
-                    Toast.makeText(PlaceView.this, "Place not found", Toast.LENGTH_SHORT).show();
-                }
+                } else {}
             }
 
             @Override
-            public void onError(Exception e) {
-                // Handle error
-                Toast.makeText(PlaceView.this, "Failed to fetch place data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+            public void onError(Exception e) {}
         });
 
     }
@@ -301,17 +295,11 @@ public class PlaceView extends AppCompatActivity {
                         }
                     });
 
-                } else {
-                    // Handle case where NTO100 is null
-                    Toast.makeText(PlaceView.this, "NTO100 not found", Toast.LENGTH_SHORT).show();
-                }
+                } else {}
             }
 
             @Override
-            public void onError(Exception e) {
-                // Handle error
-                Toast.makeText(PlaceView.this, "Failed to fetch NTO100 data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+            public void onError(Exception e) {}
         });
     }
 

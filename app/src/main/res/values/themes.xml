@@ -7,6 +7,6 @@
     </style>
 
     <style name="Theme.Turisticheska_knizhka" parent="Base.Theme.Turisticheska_knizhka">
-        <item name="android:windowBackground">@color/whiteGreen</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 </resources>

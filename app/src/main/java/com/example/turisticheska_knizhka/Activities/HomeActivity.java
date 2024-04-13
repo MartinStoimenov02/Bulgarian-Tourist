@@ -157,10 +157,7 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(Exception e) {
-                // Handle error
-                Toast.makeText(HomeActivity.this, "Error loading places", Toast.LENGTH_SHORT).show();
-            }
+            public void onError(Exception e) {}
         });
     }
 
