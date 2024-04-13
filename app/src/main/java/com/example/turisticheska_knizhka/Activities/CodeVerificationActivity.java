@@ -1,26 +1,20 @@
 package com.example.turisticheska_knizhka.Activities;
 
-        import android.app.ProgressDialog;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.Toast;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-        import androidx.annotation.NonNull;
-        import androidx.appcompat.app.AppCompatActivity;
-        import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-        import com.example.turisticheska_knizhka.DataBase.QueryLocator;
-        import com.example.turisticheska_knizhka.Models.User;
-        import com.example.turisticheska_knizhka.R;
-        import com.google.android.gms.tasks.OnFailureListener;
-        import com.google.android.gms.tasks.OnSuccessListener;
-        import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
+import com.example.turisticheska_knizhka.R;
 
-        import java.util.Random;
+import java.util.Random;
 
 public class CodeVerificationActivity extends AppCompatActivity {
 
@@ -115,73 +109,6 @@ public class CodeVerificationActivity extends AppCompatActivity {
 
     private void sendEmail(final String recipientEmail, final String subject, final String body) {
         Toast.makeText(CodeVerificationActivity.this, generatedCode, Toast.LENGTH_SHORT).show();
-//        sEmail = "pmuproject24@gmail.com";
-//        sPassword="2024-PMUproject";
-//        Properties properties = new Properties();
-//        properties.put("mail.smtp.auth","true");
-//        properties.put("mail.smtp.starttls.enable","true");
-//        properties.put("mail.smtp.host", "smtp.gmail.com");
-//        properties.put("mail.smtp.port", "587");
-//
-//        Session session1 = Session.getInstance(properties, new Authenticator() {
-//            @Override
-//            protected PasswordAuthentication getPasswordAuthentication() {
-//                return new PasswordAuthentication(sEmail, sPassword);
-//            }
-//        });
-//
-//        try{
-//            Message message = new MimeMessage(session1);
-//            message.setFrom(new InternetAddress(sEmail));
-//            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("martinstoimenov02@gmail.com"));
-//            message.setSubject(subject.trim());
-//            message.setText(body.trim());
-//            new SendMail().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, message);
-//        }catch (MessagingException e){
-//            e.printStackTrace();
-//        }
-//    }
-//    private class SendMail extends AsyncTask<Message, String, String> {
-//        private ProgressDialog progressDialog;
-//        protected  void onPreExecute(){
-//            super.onPreExecute();
-//            progressDialog = ProgressDialog.show(CodeVerificationActivity.this, "Please wait", "Sending email...", true, false);
-//
-//        }
-//        @Override
-//        protected String doInBackground(Message... messages) {
-//            try {
-//                Transport.send(messages[0]);
-//                return "Success";
-//            } catch(MessagingException e) {
-//                Log.e("AsyncTask", "Error in doInBackground: " + e.getMessage());
-//                e.printStackTrace();
-//                return "Error: " + e.getMessage(); // Return the error message
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String s) {
-//            super.onPostExecute(s);
-//            progressDialog.dismiss();
-//            if (s.startsWith("Success")) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(CodeVerificationActivity.this);
-//                builder.setCancelable(false);
-//                builder.setTitle(Html.fromHtml("<font color='#509324'>Success</font>"));
-//                builder.setMessage("Mail sent successfully.");
-//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//                builder.show();
-//            } else {
-//                // Display the error message to the user
-//                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-//            }
-//        }
-
     }
 
 

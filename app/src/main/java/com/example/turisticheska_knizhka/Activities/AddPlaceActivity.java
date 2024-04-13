@@ -108,6 +108,10 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
         });
     }
 
+    /**
+     * @param googleMap
+     * description load the map on the screen and position at the curent location, or in the Sofia center
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -131,12 +135,12 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
                     if (location != null) {
                         LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Location"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f)); // Zoom level can be adjusted as needed
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
                     } else {
                         // If unable to get current location, set default location
                         LatLng defaultLocation = new LatLng(42.698334, 23.319941);
                         mMap.addMarker(new MarkerOptions().position(defaultLocation).title("Marker in Sofia"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 15f)); // Zoom level can be adjusted as needed
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 15f));
                     }
                 });
     }

@@ -1,5 +1,6 @@
 package com.example.turisticheska_knizhka.Activities;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.Helpers.PasswordHasher;
 import com.example.turisticheska_knizhka.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -135,9 +137,10 @@ public class SignUpView extends AppCompatActivity {
                                 // Email already exists, show error and return
                                 phone.setError("Потребител с такъв телефонен номер вече съществува!");
                             } else {
-                                // Email does not exist, proceed to sign up
-                                //ProgressDialog progressDialog = ProgressDialog.show(SignUpView.this, "Моля изчакайте", "Изпращане на имейл...", true, false);
-                                navigateToCodeVerificationActivity();
+                                ProgressDialog progressDialog = ProgressDialog.show(SignUpView.this, "Моля изчакайте", "Извършва се регистрация...", true, false);
+                                // Code is valid
+                                QueryLocator.registerUser(name.getText().toString(), email.getText().toString(), phone.getText().toString(), PasswordHasher.hashPassword(password.getText().toString()));
+                                navigateToHelpActivity();
                             }
                         } else {
                             // Error occurred while fetching data
@@ -148,13 +151,20 @@ public class SignUpView extends AppCompatActivity {
     }
 
     // Method to navigate to code verification activity
-    private void navigateToCodeVerificationActivity() {
-        Intent intent = new Intent(SignUpView.this, CodeVerificationActivity.class);
-        intent.putExtra("name", name.getText().toString());
+//    private void navigateToCodeVerificationActivity() {
+//        Intent intent = new Intent(SignUpView.this, CodeVerificationActivity.class);
+//        intent.putExtra("name", name.getText().toString());
+//        intent.putExtra("email", email.getText().toString());
+//        intent.putExtra("phone", phone.getText().toString());
+//        intent.putExtra("hashedPassword", PasswordHasher.hashPassword(password.getText().toString()));
+//        startActivity(intent);
+//    }
+
+    private void navigateToHelpActivity() {
+        Intent intent = new Intent(SignUpView.this, HelpActivity.class);
         intent.putExtra("email", email.getText().toString());
-        intent.putExtra("phone", phone.getText().toString());
-        intent.putExtra("hashedPassword", PasswordHasher.hashPassword(password.getText().toString()));
         startActivity(intent);
+        finish();
     }
 
     // Method to update state of signup button

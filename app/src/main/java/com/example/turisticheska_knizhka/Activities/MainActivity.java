@@ -11,6 +11,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -144,7 +146,18 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the ListView
         ListView userListView = popupView.findViewById(R.id.userListView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, allEmails);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, allEmails){
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_list_item_1, allEmails);
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                // Set text color to white
+                TextView textView = view.findViewById(android.R.id.text1);
+                textView.setTextColor(getResources().getColor(R.color.white));
+                return view;
+            }
+        };
         userListView.setAdapter(adapter);
 
         // Set item click listener for the ListView

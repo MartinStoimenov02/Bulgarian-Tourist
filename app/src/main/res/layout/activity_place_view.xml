@@ -29,7 +29,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <!-- Bottom navigation view -->
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@android:drawable/ic_menu_delete"
+        app:layout_constraintBottom_toBottomOf="@+id/placeImageView"
+        app:layout_constraintStart_toStartOf="@+id/placeImageView" />
 
     <TextView
         android:id="@+id/placeNameTextView"
@@ -38,6 +46,8 @@
         android:gravity="center"
         android:text="Place Name"
         android:textSize="24sp"
+        android:textColor="@color/black"
+        android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/detailsLayout"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintVertical_bias="0.802"
@@ -58,6 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Разстояние: "
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="italic|bold" />
 
@@ -66,6 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="italic" />
     </LinearLayout>
@@ -87,6 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Описание: "
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="italic|bold" />
 
@@ -95,6 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="italic" />
     </LinearLayout>
@@ -114,10 +128,10 @@
             android:id="@+id/showOnMapButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:backgroundTint="@null"
             android:background="@drawable/rounded_button_orange"
             android:text="Покажи на картата"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            app:backgroundTint="@null" />
 
         <Button
             android:id="@+id/visitButton"

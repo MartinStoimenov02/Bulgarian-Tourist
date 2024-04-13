@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.util.Log;
 
@@ -55,6 +56,11 @@ public class Helper {
 //            // If no app is available to handle the intent, display a toast or handle it accordingly
 //            Toast.makeText(context, "No app available to handle this action", Toast.LENGTH_SHORT).show();
 //        }
+    }
+
+    public static boolean isLocationEnabled(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     public static float calculateDistance(String urlMap, Location currentLocation) {

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.turisticheska_knizhka"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -70,5 +70,6 @@ dependencies {
     implementation ("com.google.android.libraries.places:places:3.4.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.5.0")
+    implementation ("com.resend:resend-java:2.2.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 }

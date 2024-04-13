@@ -70,6 +70,7 @@
                 android:layout_weight="1"
                 android:enabled="false"
                 android:hint="Име"
+                android:textColorHint="@color/darkGrey"
                 android:textColor="@color/black" />
 
             <ImageButton
@@ -109,7 +110,8 @@
                 android:layout_weight="1"
                 android:textColor="@color/black"
                 android:enabled="false"
-                android:hint="Телефон" />
+                android:hint="Телефон"
+                android:textColorHint="@color/darkGrey" />
 
             <ImageButton
                 android:id="@+id/buttonEditPhone"
@@ -148,6 +150,7 @@
             android:layout_height="54dp"
             android:layout_margin="16dp"
             app:backgroundTint="@null"
+            android:textColor="@color/white"
             android:background="@drawable/rounded_button_orange"
             android:text="Промяна на парола"
             app:layout_constraintTop_toBottomOf="@+id/notificationCheckbox" />
@@ -158,6 +161,7 @@
             android:layout_height="54dp"
             android:layout_margin="16dp"
             android:text="Изтрий профил"
+            android:textColor="@color/white"
             app:backgroundTint="@null"
             android:background="@drawable/rounded_button_red"
             app:layout_constraintBottom_toTopOf="@+id/buttonLogout"
@@ -170,6 +174,7 @@
             android:layout_marginRight="16dp"
             android:layout_height="54dp"
             app:backgroundTint="@null"
+            android:textColor="@color/white"
             android:background="@drawable/rounded_button_green"
             android:layout_marginBottom="100dp"
             android:text="Изход"

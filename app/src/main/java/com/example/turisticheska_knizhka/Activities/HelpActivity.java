@@ -2,7 +2,6 @@ package com.example.turisticheska_knizhka.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,7 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.R;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class HelpActivity extends AppCompatActivity {
 
@@ -28,7 +26,7 @@ public class HelpActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore;
     private int[] imageResources = {R.drawable.slide1, R.drawable.slide2, R.drawable.slide3, R.drawable.slide4,
-            R.drawable.slide5, R.drawable.slide6, R.drawable.slide7, R.drawable.slide8, R.drawable.slide9};
+            R.drawable.slide5, R.drawable.slide6, R.drawable.slide7, R.drawable.slide8};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +55,9 @@ public class HelpActivity extends AppCompatActivity {
         updateContent(currentIndex);
     }
 
+    /**
+     * description Restrict return to previous activity with back arrow
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -71,7 +72,6 @@ public class HelpActivity extends AppCompatActivity {
         }
     }
 
-    // Method to handle next button click
     // Method to handle next button click
     public void onNextButtonClick(View view) {
         if (currentIndex < textContents.length - 1) {

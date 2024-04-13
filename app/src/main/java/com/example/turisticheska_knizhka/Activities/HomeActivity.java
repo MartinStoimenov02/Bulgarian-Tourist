@@ -1,7 +1,9 @@
 package com.example.turisticheska_knizhka.Activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -14,8 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
@@ -34,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1001;
     private static final int REQUEST_CODE_PLACE_LIST = 1;
     private String email;
     private FirebaseFirestore db;
@@ -60,6 +66,11 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             email = intent.getStringExtra("email");
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Ако разрешението не е предоставено, поискайте го от потребителя
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
         }
 
         topUsers = new ArrayList<>();
@@ -100,13 +111,24 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
+            // Проверете дали разрешението е предоставено
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Ако разрешението е предоставено, продължете с нормалното изпълнение, например, извиквайки метода showMyPlace()
+                // showMyPlace(placeId, false);
+            } else {
+                // Ако разрешението е отказано, обработете случая тук, например, покажете съобщение до потребителя или предоставете алтернативни опции
+                Toast.makeText(HomeActivity.this, "Изчисляването на разстояние е невъзможно!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PLACE_LIST) {
-            // Check if the result is OK
-            if (resultCode == RESULT_OK) {
-                // Do something when the activity returns successfully
-            }
             // Dismiss the progress dialog here
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();

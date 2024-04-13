@@ -148,6 +148,7 @@
             android:layout_marginTop="120dp"
             app:backgroundTint="@null"
             android:background="@drawable/rounded_button_orange"
+            android:textColor="@color/white"
             android:text="Виж посетените места"
             android:layout_below="@id/textViewPointsNumber"/>
     </androidx.cardview.widget.CardView>

@@ -3,12 +3,15 @@ package com.example.turisticheska_knizhka.Activities;
 import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +41,7 @@ public class PlaceView extends AppCompatActivity {
     Button showOnMapButton;
     ImageView flagImageView;
     ImageButton favouriteButton;
+    ImageButton deleteButton;
     String email;
     private BottomNavigationView bottomNavigationView;
 
@@ -58,6 +62,7 @@ public class PlaceView extends AppCompatActivity {
         favouriteButton = findViewById(R.id.favouriteButton);
         showOnMapButton = findViewById(R.id.showOnMapButton);
         descriptionTextView = findViewById(R.id.descriptionTextView);
+        deleteButton = findViewById(R.id.deleteButton);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -111,8 +116,6 @@ public class PlaceView extends AppCompatActivity {
                     refreshDistance(place);
                     // Display place details
                     placeNameTextView.setText(place.getName());
-                    String formatedDistance = formatDistance(place.getDistance());
-                    distanceTextView.setText(formatedDistance);
                     descriptionTextView.setText(place.getDescription());
                     if(Helper.checkIsNTO(place)){
                         flagImageView.setVisibility(View.VISIBLE);
@@ -120,8 +123,8 @@ public class PlaceView extends AppCompatActivity {
                         flagImageView.setVisibility(View.GONE);
                     }
                     setHeartImg(place);
-
                     changeFavourite(place);
+                    deletePlace(place);
 
                     // Example for loading image using Glide
                     Glide.with(PlaceView.this)
@@ -158,6 +161,50 @@ public class PlaceView extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void deletePlace(Place place){
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                acceptDeleting(place);
+            }
+        });
+    }
+
+    private void acceptDeleting(Place place) {
+        // Create a popup window with a message prompting the user to add the email to the local database
+        // and two buttons (Yes and No)
+        PopupWindow popupWindow = new PopupWindow(this);
+        View popupView = getLayoutInflater().inflate(R.layout.popup_layout, null);
+        popupWindow.setContentView(popupView);
+
+        // Set text of the popup message
+        TextView popupText = popupView.findViewById(R.id.popupText);
+        popupText.setText("Сигурни ли сте, че искате да изтриете тази дестинация?");
+
+        // Handle button clicks
+        Button btnYes = popupView.findViewById(R.id.btnYes);
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QueryLocator.deletePlace(place.getId());
+                Navigation nav = new Navigation(email, PlaceView.this);
+                nav.navigateToPlaceListView(1);
+            }
+        });
+
+        Button btnNo = popupView.findViewById(R.id.btnNo);
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Dismiss the popup window
+                popupWindow.dismiss();
+            }
+        });
+
+        // Show the popup window
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
     }
 
     private void changeFavourite(Place place){
@@ -278,29 +325,47 @@ public class PlaceView extends AppCompatActivity {
         }
     }
 
-    public void refreshDistance(Object obj){
+    public void refreshDistance(Object obj) {
+        if (!Helper.isLocationEnabled(PlaceView.this)) {
+            distanceTextView.setText("Разстоянието не е изчислено!");
+            Toast.makeText(PlaceView.this, "Включете локацията  и презаредете!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         ProgressDialog progressDialog = ProgressDialog.show(PlaceView.this, "Моля изчакайте", "Изчисляване на разстоянието...", true, false);
+
+        // Create a handler to implement the timeout
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+                distanceTextView.setText("Разстоянието не е изчислено!");
+                Toast.makeText(PlaceView.this, "Включете локацията  и презаредете!", Toast.LENGTH_LONG).show();
+            }
+        }, 20000); // 20 seconds timeout
+
         Helper.getCurrentLocation(PlaceView.this, new com.example.turisticheska_knizhka.Callbacks.LocationCallback() {
             @Override
             public void onLocationResult(Location location) {
-                int distance=0;
+                int distance = 0;
                 if (location != null) {
-                    if(obj instanceof Place){
+                    if (obj instanceof Place) {
                         Place place = (Place) obj;
                         // Calculate distance between current location and destination
                         distance = (int) Helper.calculateDistance(place.getUrlMap(), location);
-                        Log.d("DISTANCE", "dst: "+distance);
+                        Log.d("DISTANCE", "dst: " + distance);
                         if (distance != -1) {
-                                // Display distance
-                                place.setDistance(distance);
-                                progressDialog.dismiss();
-                                QueryLocator.updatePlaceDistance(place, distance);
+                            // Display distance
+                            place.setDistance(distance);
+                            progressDialog.dismiss();
+                            QueryLocator.updatePlaceDistance(place, distance);
                         }
-                    }else if (obj instanceof NTO100){
+                    } else if (obj instanceof NTO100) {
                         NTO100 nto100 = (NTO100) obj;
                         // Calculate distance between current location and destination
                         distance = (int) Helper.calculateDistance(nto100.getUrlMap(), location);
-                        Log.d("DISTANCE", "dst: "+distance);
+                        Log.d("DISTANCE", "dst: " + distance);
                         if (distance != -1) {
                             // Display distance
                             nto100.setDistance(distance);
@@ -308,13 +373,15 @@ public class PlaceView extends AppCompatActivity {
                             //QueryLocator.updatePlaceDistance(nto100, distance);
                         }
                     }
-
                 }
-                String formatedString = formatDistance(distance);
-                distanceTextView.setText(formatedString);
+                String formattedString = formatDistance(distance);
+                distanceTextView.setText(formattedString);
+                // Remove the timeout callback
+                handler.removeCallbacksAndMessages(null);
             }
         });
     }
+
 
     private void navigationMenu(int nav){
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -324,7 +391,7 @@ public class PlaceView extends AppCompatActivity {
     }
 
     private void visitPlace(Place place){
-            if(place.getDistance()<500){
+            if(place.getDistance()<500 && distanceTextView.getText()!="Разстоянието не е изчислено!"){
                 place.setIsVisited(true);
                 QueryLocator.updatePlaceVisitation(place);
                 visitButton.setVisibility(View.INVISIBLE);

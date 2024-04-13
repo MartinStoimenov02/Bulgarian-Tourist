@@ -27,6 +27,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:hint="Въведете кода"
+        android:textColorHint="@color/darkGrey"
         android:inputType="text"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +45,7 @@
         android:text="Потвърди"
         app:backgroundTint="@null"
         android:background="@drawable/rounded_button_orange"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/codeInput" />
@@ -55,6 +57,7 @@
         android:layout_height="wrap_content"
         android:text="Проверете пощенската си кутия на въведения от Вас имейл адрес. Ако все още нямате код натиснете 'Изпрати отново' или проверете дали правилно сте въвели имейл адреса си!"
         android:textAlignment="center"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/verifyButton"

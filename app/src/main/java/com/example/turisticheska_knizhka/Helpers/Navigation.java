@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.example.turisticheska_knizhka.Activities.HelpActivity;
 import com.example.turisticheska_knizhka.Activities.HomeActivity;
+import com.example.turisticheska_knizhka.Activities.NearestActivity;
 import com.example.turisticheska_knizhka.Activities.PlaceListView;
 import com.example.turisticheska_knizhka.Activities.ProfileActivity;
 import com.example.turisticheska_knizhka.R;
@@ -30,7 +31,7 @@ public class Navigation {
                 navigateToPlaceListView(2);
                 return true;
             } else if(item.getItemId()==R.id.action_nearest){
-                //navigateToHomeActivity();
+                navigateToNearestActivity();
                 return true;
             } else if(item.getItemId()==R.id.action_profile){
                 navigateToProfileActivity();
@@ -80,6 +81,14 @@ public class Navigation {
 
     private void navigateToProfileActivity(){
         Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra("email", email);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        context.startActivity(intent);
+        ((Activity)context).finish();
+    }
+
+    private void navigateToNearestActivity(){
+        Intent intent = new Intent(context, NearestActivity.class);
         intent.putExtra("email", email);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         context.startActivity(intent);
