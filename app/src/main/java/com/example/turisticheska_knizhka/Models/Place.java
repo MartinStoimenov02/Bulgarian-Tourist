@@ -10,8 +10,8 @@ public class Place {
     private int distance;
     private boolean isFavourite;
     private boolean isVisited;
-    private DocumentReference userEmail; // Changed type to DocumentReference
-    private DocumentReference nto100; // Changed type to DocumentReference
+    private DocumentReference userEmail;
+    private DocumentReference nto100;
     private String description;
 
     // Default constructor
