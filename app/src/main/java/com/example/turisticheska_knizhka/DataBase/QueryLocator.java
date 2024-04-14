@@ -107,6 +107,7 @@ public class QueryLocator {
         // Query the 'places' collection to get places associated with the provided user reference
         firestore.collection("places")
                 .whereEqualTo("userEmail", userRef)
+                //.orderBy("name")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Place> places = new ArrayList<>();
@@ -129,6 +130,7 @@ public class QueryLocator {
         firestore.collection("places")
                 .whereEqualTo("userEmail", userRef)
                 .whereEqualTo("isVisited", false)
+                //.orderBy("name")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Place> places = new ArrayList<>();
@@ -172,6 +174,7 @@ public class QueryLocator {
 
         // Query the 'places' collection to get places associated with the provided user reference
         firestore.collection("nto100").whereEqualTo("isActive", true)
+                //.orderBy("numberInNationalList")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<NTO100> nto100s = new ArrayList<>();
@@ -207,6 +210,7 @@ public class QueryLocator {
         firestore.collection("places")
                 .whereEqualTo("userEmail", userRef)
                 .whereEqualTo("isVisited", true)
+                //.orderBy("name")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Place> places = new ArrayList<>();
