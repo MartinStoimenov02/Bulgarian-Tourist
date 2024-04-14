@@ -106,6 +106,7 @@ public class PlaceView extends AppCompatActivity {
 
     private void showMyPlace(String placeId, boolean isVisited){
         navigationMenu(R.id.action_my_places);
+        deleteButton.setVisibility(View.VISIBLE);
         if(isVisited)visitButton.setVisibility(View.INVISIBLE);
         else visitButton.setText("Посети");
 
@@ -224,6 +225,7 @@ public class PlaceView extends AppCompatActivity {
     }
 
     private void show100ntos(String placeId){
+        deleteButton.setVisibility(View.INVISIBLE);
         navigationMenu(R.id.action_nto100);
         Log.d("NTO100_ID", "id: "+placeId);
         visitButton.setText("Добави за посещение");
