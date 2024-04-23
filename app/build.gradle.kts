@@ -72,4 +72,5 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.5.0")
     implementation ("com.resend:resend-java:2.2.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("com.google.maps.android:android-maps-utils:0.4")
 }

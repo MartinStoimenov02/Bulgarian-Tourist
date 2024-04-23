@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.example.turisticheska_knizhka.Activities.PlaceView;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.Helpers.Helper;
+import com.example.turisticheska_knizhka.Helpers.NumberImgParser;
 import com.example.turisticheska_knizhka.Models.Place;
 import com.example.turisticheska_knizhka.R;
 
@@ -59,8 +60,9 @@ public class PlaceAdapter extends ArrayAdapter<Place> {
         }
 
         TextView placeNumber = listItem.findViewById(R.id.placeNumber);
-        String stringPosition = String.valueOf(position + 1);
-        String placeNumberText = " "+stringPosition+") ";
+        //String stringPosition = String.valueOf(position + 1);
+        //String placeNumberText = " "+stringPosition+") ";
+        String placeNumberText = NumberImgParser.parseListEmojiForNum(position + 1)+" ";
         placeNumber.setText(placeNumberText);
 
         // Display heart button

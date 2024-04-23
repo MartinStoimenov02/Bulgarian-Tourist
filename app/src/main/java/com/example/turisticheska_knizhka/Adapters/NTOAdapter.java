@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.turisticheska_knizhka.Helpers.NumberImgParser;
 import com.example.turisticheska_knizhka.Models.NTO100;
 import com.example.turisticheska_knizhka.R;
 
@@ -42,7 +43,9 @@ public class NTOAdapter extends ArrayAdapter<NTO100> {
         placeNameTextView.setText(currentPlace.getName());
 
         TextView placeNumber = listItem.findViewById(R.id.placeNumber);
-        String placeNumberText = " "+currentPlace.getNumberInNationalList()+") ";
+        //String placeNumberText = " "+currentPlace.getNumberInNationalList()+") ";
+        int numberInList = Integer.parseInt(currentPlace.getNumberInNationalList());
+        String placeNumberText = NumberImgParser.parseListEmojiForNum(numberInList)+" ";
         placeNumber.setText(placeNumberText);
 
         // Display heart button

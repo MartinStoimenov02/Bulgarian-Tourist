@@ -14,11 +14,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.turisticheska_knizhka.Callbacks.SingleUserCallback;
+import com.example.turisticheska_knizhka.DataBase.LocalDatabase;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.Helpers.Navigation;
+import com.example.turisticheska_knizhka.Helpers.ShowPushNotificationsPermision;
 import com.example.turisticheska_knizhka.Models.User;
 import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
     String email;
@@ -109,6 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         notificationCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             QueryLocator.updateUserSingleField(email, notificationCheckbox.isChecked(), "notifications");
+            ShowPushNotificationsPermision.showNotifications(email, ProfileActivity.this);
         });
 
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +138,11 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ProgressDialog progressDialog = ProgressDialog.show(ProfileActivity.this, "Моля изчакайте", "Излизане...", true, false);
+                LocalDatabase sqlLite = new LocalDatabase(ProfileActivity.this);
+                List<String> rememberedEmails = sqlLite.getEmailsWithRememberMe();
+                if(rememberedEmails.size()!=0 && email.equals(rememberedEmails.get(0))){
+                    sqlLite.deleteEmail(email);
+                }
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

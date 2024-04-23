@@ -57,7 +57,7 @@
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+"
+            android:text="➕"
             android:textSize="20dp"
             android:textColor="@color/white"
             app:backgroundTint="@null"
@@ -73,7 +73,7 @@
             android:textColor="@color/white"
             android:textSize="20dp"
             android:background="@drawable/rounded_button_orange"
-            android:text="а-я"/>
+            android:text="🔤"/>
 
     </LinearLayout>
 
@@ -87,7 +87,19 @@
         android:layout_marginBottom="37dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:divider="@android:color/transparent" />
+        android:divider="@android:color/transparent" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/loadingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Зареждане..."
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:textSize="20sp"
+        android:layout_centerInParent="true" />
 
     <!-- Bottom navigation view -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

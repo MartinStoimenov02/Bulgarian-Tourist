@@ -108,7 +108,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 if (usr!=null) {
                     String newPassword = editTextNewPassword.getText().toString();
                     QueryLocator.updateUserSingleField(email, PasswordHasher.hashPassword(newPassword), "password");
-                    localDatabase.updatePassword(email, PasswordHasher.hashPassword(newPassword));
+                    localDatabase.updatePassword(email, PasswordHasher.hashPassword(newPassword), false);
                     Toast.makeText(ChangePasswordActivity.this, "Успешно променихте паролата си!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(ChangePasswordActivity.this, ProfileActivity.class);
                     intent.putExtra("email", email);

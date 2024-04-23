@@ -2,20 +2,29 @@ package com.example.turisticheska_knizhka.Activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.turisticheska_knizhka.Callbacks.AddPlaceCallback;
 import com.example.turisticheska_knizhka.Callbacks.NTO100Callback;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.Helpers.Navigation;
@@ -54,7 +63,9 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
     EditText placeEditText;
     EditText placeDescription;
     private Button addButton;
+    private ImageView searchButton;
     private static BottomNavigationView bottomNavigationView;
+    InputMethodManager imm;
     String email;
 
 
@@ -67,6 +78,7 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
         placeEditText = findViewById(R.id.placeEditText);
         placeDescription = findViewById(R.id.placeDescription);
         addButton = findViewById(R.id.addButton);
+        searchButton = findViewById(R.id.searchButton);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -77,6 +89,7 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
         bottomNavigationView.setSelectedItemId(R.id.action_my_places);
         Navigation navigation = new Navigation(email, AddPlaceActivity.this);
         navigation.bottomNavigation(bottomNavigationView);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -103,6 +116,19 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
                         ProgressDialog progressDialog = ProgressDialog.show(AddPlaceActivity.this, "Моля изчакайте", "Добавяне на дестинацията...", true, false);
                         getImage(urlMap, placeName, email, description);
                     }
+                }
+            }
+        });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String placeName = String.valueOf(placeEditText.getText());
+                Log.d("PLACENAME", "place: "+placeName);
+                if(placeName.equals("")){
+                    Toast.makeText(AddPlaceActivity.this, "Моля въведете име!", Toast.LENGTH_LONG).show();
+                } else{
+                    getPlaceDetailsFromGoogle(placeName);
                 }
             }
         });
@@ -134,12 +160,12 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
                         LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Location"));
+                        //mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Location"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
                     } else {
                         // If unable to get current location, set default location
                         LatLng defaultLocation = new LatLng(42.698334, 23.319941);
-                        mMap.addMarker(new MarkerOptions().position(defaultLocation).title("Marker in Sofia"));
+                        //mMap.addMarker(new MarkerOptions().position(defaultLocation).title("Marker in Sofia"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 15f));
                     }
                 });
@@ -147,8 +173,14 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onMapClick(LatLng latLng) {
+        chooseLocationOnMap(latLng);
+    }
+
+    public void chooseLocationOnMap(LatLng latLng){
         mMap.clear(); // Clear existing markers
         mMap.addMarker(new MarkerOptions().position(latLng)); // Add a marker at the clicked location
+        //mMap.addMarker(new MarkerOptions().position(defaultLocation).title("Marker in Sofia"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
 
         // Construct URL based on coordinates
         urlMap = String.format(Locale.getDefault(), "https://maps.google.com/maps?q=%f,%f", latLng.latitude, latLng.longitude);
@@ -218,10 +250,18 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
                 DocumentReference userRef = QueryLocator.getUserRef(email);
 
                 Place newPlace = new Place(
-                        name, urlMap, imgPath, -1, userRef, ntoRef, description
+                        name, urlMap, imgPath, userRef, ntoRef, description
                 );
-                QueryLocator.addPlaceToMyPlaces(newPlace);
-                navigateToNewPlace(newPlace.getId());
+
+                //QueryLocator.addPlaceToMyPlaces(newPlace);
+                QueryLocator.addPlaceToMyPlaces(newPlace, new AddPlaceCallback() {
+                    @Override
+                    public void onPlaceAdded(String placeId) {
+                        if (placeId != null) {
+                            navigateToNewPlace(placeId);
+                        }
+                    }
+                });
             }
 
             @Override
@@ -230,9 +270,59 @@ public class AddPlaceActivity extends AppCompatActivity implements OnMapReadyCal
         });
     }
 
+    private void getPlaceDetailsFromGoogle(String placeName) {
+        Log.d("PLACEDETAILS", "getPlaceDetailsFromGoogle");
+        // Construct the URL for the Google Places API request
+        String apiKey = "AIzaSyD_GRf1KLUaX7r8cIiRGSNgkeklL5F0u2I";
+        String url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json" +
+                "?input=" + placeName +
+                "&inputtype=textquery" +
+                "&fields=all" +
+                "&key=" + apiKey;
+
+        // Make the API call using Volley, Retrofit, or any other networking library of your choice
+        // For simplicity, I'll use Volley here
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject result = response.getJSONArray("candidates").getJSONObject(0);
+                            JSONObject geometry = result.getJSONObject("geometry");
+                            JSONObject location = geometry.getJSONObject("location");
+
+                            double latitude = location.getDouble("lat");
+                            double longitude = location.getDouble("lng");
+
+                            Log.d("PLACEDETAILS", "Latitude: " + latitude + ", Longitude: " + longitude);
+                            LatLng searchedLocation = new LatLng(latitude, longitude);
+                            chooseLocationOnMap(searchedLocation);
+                            //View view = getLayoutInflater().inflate(R.layout.activity_add_place, null);
+                            //imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+
+        // Add the request to the Volley request queue
+        // Make sure you have Volley set up properly in your project
+        Volley.newRequestQueue(this).add(request);
+    }
+
     private void navigateToNewPlace(String placeId){
-        Intent placeViewIntent = new Intent(AddPlaceActivity.this, PlaceListView.class);
+        Log.d("PLACEID", "pla:"+placeId);
+
+        Intent placeViewIntent = new Intent(AddPlaceActivity.this, PlaceView.class);
         placeViewIntent.putExtra("caseNumber", 1);
+        placeViewIntent.putExtra("placeId", placeId);
         placeViewIntent.putExtra("email", email);
         startActivity(placeViewIntent);
         finishAffinity();

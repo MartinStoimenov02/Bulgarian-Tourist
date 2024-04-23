@@ -1,5 +1,9 @@
 package com.example.turisticheska_knizhka.Helpers;
 
+import static java.lang.Math.acos;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +15,6 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
-import com.example.turisticheska_knizhka.Activities.PlaceView;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.Models.NTO100;
 import com.example.turisticheska_knizhka.Models.Place;
@@ -27,12 +30,12 @@ public class Helper {
         return place.getNto100() != null;
     }
 
-    public static Place createPlaceFromNTO(String name, String urlMap, String imgPath, int distance, String userEmail, String ntoId, String description){
+    public static Place createPlaceFromNTO(String name, String urlMap, String imgPath, String userEmail, String ntoId, String description){
         Log.d("ADD", "nto id: "+ntoId);
         Log.d("ADD", "nto id: "+userEmail);
         DocumentReference userRef = QueryLocator.getUserRef(userEmail);
         DocumentReference ntoRef = QueryLocator.getNTORef(ntoId);
-        return new Place(name, urlMap, imgPath, distance, userRef, ntoRef, description);
+        return new Place(name, urlMap, imgPath, userRef, ntoRef, description);
     }
 
     public static void showOnMap(Context context, Object place){
@@ -70,10 +73,23 @@ public class Helper {
         destinationLocation.setLongitude(longitude);
 
         // Calculate distance between current location and destination
-        return currentLocation.distanceTo(destinationLocation);
+
+        //return currentLocation.distanceTo(destinationLocation);
+
+        float[] results = new float[1];
+        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                destinationLocation.getLatitude(), destinationLocation.getLongitude(), results);
+        return results[0];
+
+//        return distanceFormula(currentLocation.getLatitude(), currentLocation.getLongitude(),
+//                destinationLocation.getLatitude(), destinationLocation.getLongitude());
     }
 
-    public static void getCurrentLocation(PlaceView context, com.example.turisticheska_knizhka.Callbacks.LocationCallback locationCallback) {
+    public static float distanceFormula(double lat1, double lon1, double lat2, double lon2){
+        return (float)acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371;
+    }
+
+    public static void getCurrentLocation(Context context, com.example.turisticheska_knizhka.Callbacks.LocationCallback locationCallback) {
         // Create a location request
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)

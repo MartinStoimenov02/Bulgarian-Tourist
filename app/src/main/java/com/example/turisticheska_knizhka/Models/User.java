@@ -5,7 +5,6 @@ public class User {
     private String email;
     private String phone;
     private String password;
-    private boolean rememberMe;
     private boolean notifications;
     private boolean loginFirst;
     private int points;
@@ -19,7 +18,6 @@ public class User {
         setEmail(email);
         setPhone(phone);
         setPassword(password);
-        setRememberMe(false); // Default value
         setNotifications(true); // Default value
         setLoginFirst(true); // Default value
         setPoints(0);
@@ -42,9 +40,6 @@ public class User {
     public String getPassword() {
         return password;
     }
-    public boolean getRememberMe() {
-        return rememberMe;
-    }
     public boolean getLoginFirst() {
         return loginFirst;
     }
@@ -64,9 +59,6 @@ public class User {
     }
     public void setPassword(String password) {
         this.password = password;
-    }
-    public void setRememberMe(boolean rememberMe) {
-        this.rememberMe = rememberMe;
     }
     public void setNotifications(boolean notifications) {
         this.notifications = notifications;

@@ -7,7 +7,6 @@ public class Place {
     private String name;
     private String urlMap;
     private String imgPath;
-    private int distance;
     private boolean isFavourite;
     private boolean isVisited;
     private DocumentReference userEmail;
@@ -17,11 +16,10 @@ public class Place {
     // Default constructor
     public Place() {}
 
-    public Place(String name, String urlMap, String imgPath, int distance, DocumentReference userEmail, DocumentReference nto100, String description) {
+    public Place(String name, String urlMap, String imgPath, DocumentReference userEmail, DocumentReference nto100, String description) {
         setName(name);
         setUrlMap(urlMap);
         setImgPath(imgPath);
-        setDistance(distance);
         setIsFavourite(false);
         setIsVisited(false);
         setUserEmail(userEmail);
@@ -41,9 +39,6 @@ public class Place {
     }
     public String getImgPath() {
         return imgPath;
-    }
-    public int getDistance() {
-        return distance;
     }
     public boolean getIsFavourite() {
         return isFavourite;
@@ -73,9 +68,6 @@ public class Place {
     }
     public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
-    }
-    public void setDistance(int distance) {
-        this.distance = distance;
     }
     public void setIsFavourite(boolean favourite) {
         isFavourite = favourite;

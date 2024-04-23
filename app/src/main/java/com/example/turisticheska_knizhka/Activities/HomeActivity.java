@@ -25,6 +25,8 @@ import androidx.core.content.ContextCompat;
 import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
 import com.example.turisticheska_knizhka.DataBase.QueryLocator;
 import com.example.turisticheska_knizhka.Helpers.Navigation;
+import com.example.turisticheska_knizhka.Helpers.NumberImgParser;
+import com.example.turisticheska_knizhka.Helpers.ShowPushNotificationsPermision;
 import com.example.turisticheska_knizhka.Models.Place;
 import com.example.turisticheska_knizhka.Models.User;
 import com.example.turisticheska_knizhka.R;
@@ -108,6 +110,8 @@ public class HomeActivity extends AppCompatActivity {
         navigation.topMenu(topMenu);
         getLinkedVisitedPlaces();
         fetchTopUsers();
+
+        ShowPushNotificationsPermision.showNotifications(email, this);
     }
 
     @Override
@@ -137,8 +141,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void displayPointsAndLevel() {
-        textViewPoints.setText(String.valueOf(points)); // Convert int to String
-        textViewLevel.setText(String.valueOf(level)); // Convert int to String
+        textViewPoints.setText(NumberImgParser.parseListEmojiForNum(points));
+        //textViewPoints.setText(String.valueOf(points)); // Convert int to String
+        //textViewLevel.setText(String.valueOf(level)); // Convert int to String
+        textViewLevel.setText(NumberImgParser.parseListEmojiForNum(level));
     }
 
     private void getLinkedVisitedPlaces() {
@@ -184,7 +190,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private void displayCountOfPlaces(){
         TextView textViewPlacesCount = findViewById(R.id.textViewPlacesCount);
-        textViewPlacesCount.setText("Брой посетени места: "+placeList.size());
+        //textViewPlacesCount.setText("Брой посетени места: "+placeList.size());
+        textViewPlacesCount.setText("Брой посетени места: "+NumberImgParser.parseListEmojiForNum(placeList.size()));
     }
 
     private void fetchTopUsers() {
@@ -217,7 +224,7 @@ public class HomeActivity extends AppCompatActivity {
             TextView textView = new TextView(this);
             if(i<=3){
                 // Create a SpannableString to apply different styles
-                SpannableString spannableString = new SpannableString(i + ") " + user.getEmail() + ": " + user.getPoints() + " точки");
+                SpannableString spannableString = new SpannableString(NumberImgParser.parseListEmojiForNum(i) + " " + user.getEmail() + ": " + user.getPoints() + " точки");
 
                 // Apply bold style to the substring containing the points
                 int startIndex = i + user.getEmail().length() + 3; // Adjust the starting index
@@ -230,7 +237,7 @@ public class HomeActivity extends AppCompatActivity {
                 topUsersLayout.addView(textView);
             }
             if(email.equals(user.getEmail())){
-                meTextView.setText(i+") "+user.getEmail() + ": " + user.getPoints()+" точки");
+                meTextView.setText(NumberImgParser.parseListEmojiForNum(i)+user.getEmail() + ": " + user.getPoints()+" точки");
                 meTextView.setTextSize(16);
             }
             i++;

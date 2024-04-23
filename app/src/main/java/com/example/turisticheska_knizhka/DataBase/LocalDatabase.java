@@ -19,6 +19,7 @@ public class LocalDatabase extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "email";
     private static final String KEY_PH_NO = "Password";
+    private static final String KEY_REMEMBER_ME = "RememberMe";
 
     public LocalDatabase(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -30,26 +31,32 @@ public class LocalDatabase extends SQLiteOpenHelper {
     }
 
     // Създаване на Таблицата
-    @Override public void onCreate(SQLiteDatabase db) {
+    @Override
+    public void onCreate(SQLiteDatabase db) {
         String CREATE_EMAIL_TABLE = "CREATE TABLE " + TABLE_EMAILS + "(" +
-                KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_PH_NO + " TEXT" + ")";
+                KEY_ID + " INTEGER PRIMARY KEY," +
+                KEY_NAME + " TEXT," +
+                KEY_PH_NO + " TEXT," +
+                KEY_REMEMBER_ME + " INTEGER" + ")"; // New column for "Remember Me"
         db.execSQL(CREATE_EMAIL_TABLE);
     }
 
     // Добавяне на нов Потребител
-    public void addEmail(String email, String password) {
+    public void addEmail(String email, String password, boolean rememberMe) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, email);
         values.put(KEY_PH_NO, password);
+        values.put(KEY_REMEMBER_ME, rememberMe ? 1 : 0); // Convert boolean to integer
         db.insert(TABLE_EMAILS, null, values);
         db.close();
     }
 
-    public void updatePassword(String email, String newPassword) {
+    public void updatePassword(String email, String newPassword, boolean rememberMe) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_PH_NO, newPassword);
+        values.put(KEY_REMEMBER_ME, rememberMe ? 1 : 0); // Convert boolean to integer
 
         // Define the WHERE clause to specify which record(s) to update
         String whereClause = KEY_NAME + " = ?";
@@ -60,13 +67,39 @@ public class LocalDatabase extends SQLiteOpenHelper {
 
         // Check if any rows were affected
         if (rowsAffected > 0) {
-            Log.d("LocalDatabase", "Password updated successfully for email: " + email);
+            Log.d("LocalDatabase", "Password and RememberMe updated successfully for email: " + email);
         } else {
-            Log.e("LocalDatabase", "Failed to update password for email: " + email);
+            Log.e("LocalDatabase", "Failed to update password and RememberMe for email: " + email);
         }
 
         db.close();
     }
+
+
+    public List<String> getEmailsWithRememberMe() {
+        List<String> emailsWithRememberMe = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {KEY_NAME}; // Assuming KEY_NAME is the column for email
+        String selection = KEY_REMEMBER_ME + " = ?";
+        String[] selectionArgs = {"1"}; // Assuming 1 represents true in the database
+        Cursor cursor = db.query(TABLE_EMAILS, columns, selection, selectionArgs, null, null, null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int emailIndex = cursor.getColumnIndex(KEY_NAME);
+                if (emailIndex >= 0) {
+                    String email = cursor.getString(emailIndex);
+                    emailsWithRememberMe.add(email);
+                }
+            }
+            cursor.close();
+        }
+        db.close();
+
+        return emailsWithRememberMe;
+    }
+
+
 
 
     // Вземане на всички Потребители

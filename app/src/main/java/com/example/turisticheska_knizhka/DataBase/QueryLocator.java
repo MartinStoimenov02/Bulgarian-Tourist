@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.turisticheska_knizhka.Callbacks.AddPlaceCallback;
 import com.example.turisticheska_knizhka.Callbacks.NTO100Callback;
 import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
 import com.example.turisticheska_knizhka.Callbacks.SingleNTO100Callback;
@@ -11,6 +12,7 @@ import com.example.turisticheska_knizhka.Callbacks.SinglePlaceCallback;
 import com.example.turisticheska_knizhka.Callbacks.SingleUserCallback;
 import com.example.turisticheska_knizhka.Models.NTO100;
 import com.example.turisticheska_knizhka.Models.Place;
+import com.example.turisticheska_knizhka.Models.Report;
 import com.example.turisticheska_knizhka.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -143,6 +145,27 @@ public class QueryLocator {
                     callback.onPlacesLoaded(places); // Return the list of filtered places
                 })
                 .addOnFailureListener(callback::onError); // Return any database errors
+    }
+
+    public static void saveReport(Report userReport) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Get a reference to the "places" collection
+        CollectionReference reportCollectionRef = db.collection("reports");
+
+        // Add the new place to the "places" collection
+        reportCollectionRef.add(userReport)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            String reportId = task.getResult().getId();
+                            Log.d("TAG", "Report added with ID: " + reportId);
+                        } else {
+                            Log.w("TAG", "Error adding place", task.getException());
+                        }
+                    }
+                });
     }
 
     public static void updateFavouriteStatus(String placeId, boolean isFavourite) {
@@ -341,7 +364,7 @@ public class QueryLocator {
                 });
     }
 
-    public static void addPlaceToMyPlaces(Place newPlace){
+    public static void addPlaceToMyPlaces(Place newPlace, AddPlaceCallback callback){
         // Access a Cloud Firestore instance
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -355,30 +378,35 @@ public class QueryLocator {
                     public void onComplete(@NonNull Task<DocumentReference> task) {
                         if (task.isSuccessful()) {
                             // Place added successfully
-                            Log.d("TAG", "Place added with ID: " + task.getResult().getId());
+                            String placeId = task.getResult().getId();
+                            Log.d("TAG", "Place added with ID: " + placeId);
+                            // Pass the ID back to the caller
+                            callback.onPlaceAdded(placeId);
                         } else {
                             // Failed to add place
                             Log.w("TAG", "Error adding place", task.getException());
+                            // Pass null back to the caller to indicate failure
+                            callback.onPlaceAdded(null);
                         }
                     }
                 });
     }
 
-    public static void updatePlaceDistance(Object obj, int distance){
-        if(obj instanceof Place){
-            Place place = (Place) obj;
-            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-            firestore.collection("places").document(place.getId()).update("distance", distance)
-                   .addOnSuccessListener(aVoid -> {})
-                   .addOnFailureListener(e -> {});
-        }else if (obj instanceof NTO100){
-            NTO100 nto100 = (NTO100) obj;
-            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-            firestore.collection("nto100").document(nto100.getId()).update("distance", distance)
-                    .addOnSuccessListener(aVoid -> {})
-                    .addOnFailureListener(e -> {});
-        }
-    }
+//    public static void updatePlaceDistance(Object obj, int distance){
+//        if(obj instanceof Place){
+//            Place place = (Place) obj;
+//            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+//            firestore.collection("places").document(place.getId()).update("distance", distance)
+//                   .addOnSuccessListener(aVoid -> {})
+//                   .addOnFailureListener(e -> {});
+//        }else if (obj instanceof NTO100){
+//            NTO100 nto100 = (NTO100) obj;
+//            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+//            firestore.collection("nto100").document(nto100.getId()).update("distance", distance)
+//                    .addOnSuccessListener(aVoid -> {})
+//                    .addOnFailureListener(e -> {});
+//        }
+//    }
 
     public static void updatePlaceVisitation(Place place){
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private CheckBox showPasswordCheckBox;
+    private CheckBox rememberMeCheckbox;
     private FirebaseFirestore firestore;
     final LocalDatabase localDatabase = new LocalDatabase(this);
 
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login);
         signupButton = findViewById(R.id.signup);
         showPasswordCheckBox = findViewById(R.id.showPassword);
+        rememberMeCheckbox = findViewById(R.id.rememberMe);
         setImageRandomly();
         setupKeyboardListener();
         // Add TextChangedListeners to EditText fields
@@ -83,34 +86,41 @@ public class MainActivity extends AppCompatActivity {
         password.addTextChangedListener(textWatcher);
         // Disable buttons initially and set colors
 
-        List<String> allEmails = localDatabase.getAllEmails();
-        if(allEmails.size()>0){
-            BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                    .setTitle("Моля потвърдете!")
-                    .setDescription("задължителна ауторизация!")
-                    .setNegativeButtonText("откажи")
-                    .build();
-            getPrompt().authenticate(promptInfo);
+        List<String> rememberedEmails = localDatabase.getEmailsWithRememberMe();
+        Log.d("REMEMBER", rememberedEmails.toString());
+        if(rememberedEmails.size()==1){
+            navigateToHomeActivity(rememberedEmails.get(0));
         }
-
-        updateButtonState();
-        showPassword();
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Create intent to start PlaceView activity
-                Intent intent = new Intent(MainActivity.this, SignUpView.class);
-                // Start the activity
-                startActivity(intent);
+        else {
+            List<String> allEmails = localDatabase.getAllEmails();
+            if(allEmails.size()>0){
+                BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                        .setTitle("Моля потвърдете!")
+                        .setDescription("задължителна ауторизация!")
+                        .setNegativeButtonText("откажи")
+                        .build();
+                getPrompt().authenticate(promptInfo);
             }
-        });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkForExistingUser(email.getText().toString(), PasswordHasher.hashPassword(password.getText().toString()));
-            }
-        });
+            updateButtonState();
+            showPassword();
+            signupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Create intent to start PlaceView activity
+                    Intent intent = new Intent(MainActivity.this, SignUpView.class);
+                    // Start the activity
+                    startActivity(intent);
+                }
+            });
+
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkForExistingUser(email.getText().toString(), PasswordHasher.hashPassword(password.getText().toString()), rememberMeCheckbox.isChecked());
+                }
+            });
+        }
     }
 
     private BiometricPrompt getPrompt(){
@@ -126,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onAuthenticationSucceeded(result);
                 List<String> allEmails = localDatabase.getAllEmails();
                 if(allEmails.size()>1){chooseEmailToLogin(allEmails);}
-                else if(allEmails.size()==1){checkForExistingUser(allEmails.get(0), localDatabase.getHashedPassword(allEmails.get(0)));}
+                else if(allEmails.size()==1){checkForExistingUser(allEmails.get(0), localDatabase.getHashedPassword(allEmails.get(0)), false);}
             }
 
             @Override
@@ -170,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 String hashedPassword = localDatabase.getHashedPassword(selectedEmail);
 
                 // Call a method to check for the existing user using the selected email and hashed password
-                checkForExistingUser(selectedEmail, hashedPassword);
+                checkForExistingUser(selectedEmail, hashedPassword, false);
             }
         });
 
@@ -219,15 +229,28 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void checkForExistingUser(String emailText, String hashPasswordText){
+    private void checkForExistingUser(String emailText, String hashPasswordText, boolean rememberMe){
         QueryLocator.checkForExistingUser(emailText, hashPasswordText, new SingleUserCallback() {
 
             @Override
             public void onUserLoaded(User usr) {
                 if (usr!=null) {
+                    //ако имейла не съществува локлано...
                     if (!savedEmailExists(emailText)) {
-                        activateFingerPrintForEmail(emailText, hashPasswordText);
-                    } else {
+                        //... но е избрал функция "Запомни ме"...
+                        if (rememberMe) {
+                            //...той директно се добавя в локалната база данни с включена функция "Запомни ме"
+                            localDatabase.addEmail(emailText, hashPasswordText, true);
+                        }else{
+                            //...в противен случай му се предлага да активира функцията за пръстов отпечатък
+                            activateFingerPrintForEmail(emailText, hashPasswordText);
+                        }
+                    }
+                    //ако имейла вече съществува локално, след верификацията се пренасочва към началната страница/помощното меню
+                    else {
+                        if(rememberMe){
+                            localDatabase.updatePassword(emailText, hashPasswordText, true);
+                        }
                         checkIsFirstLogin(emailText);
                     }
                 } else {
@@ -263,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Add email to the local database
-                localDatabase.addEmail(email, password);
+                localDatabase.addEmail(email, password, false);
                 // Dismiss the popup window
                 popupWindow.dismiss();
                 checkIsFirstLogin(email);
@@ -422,11 +445,15 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Glide.with(MainActivity.this)
-                                    .load(imageUrl)
-                                    .placeholder(R.drawable.placeholder_image)
-                                    .error(R.drawable.error_image)
-                                    .into(imageView);
+
+                            if (!isDestroyed()) {
+                                Glide.with(MainActivity.this)
+                                        .load(imageUrl)
+                                        .placeholder(R.drawable.placeholder_image)
+                                        .error(R.drawable.error_image)
+                                        .into(imageView);
+                            }
+
                         }
                     });
 
@@ -438,7 +465,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
 
     private void setupKeyboardListener() {
         final View mainLayout = findViewById(R.id.loginLayout); // Change to your main layout id

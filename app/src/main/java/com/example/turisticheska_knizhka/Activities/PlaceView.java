@@ -1,6 +1,5 @@
 package com.example.turisticheska_knizhka.Activities;
 
-import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +17,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.turisticheska_knizhka.Callbacks.PlacesCallback;
 import com.example.turisticheska_knizhka.Callbacks.SingleNTO100Callback;
@@ -30,7 +34,13 @@ import com.example.turisticheska_knizhka.Models.Place;
 import com.example.turisticheska_knizhka.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PlaceView extends AppCompatActivity {
     ImageView placeImageView;
@@ -42,8 +52,15 @@ public class PlaceView extends AppCompatActivity {
     ImageView flagImageView;
     ImageButton favouriteButton;
     ImageButton deleteButton;
+    TextView addressTextView;
+    TextView openedTextView;
+    TextView typesTextView;
+    TextView ratingTextView;
+    TextView phoneTextView;
     String email;
     private BottomNavigationView bottomNavigationView;
+    private int distance = 0;
+    private int caseNumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +68,7 @@ public class PlaceView extends AppCompatActivity {
         setContentView(R.layout.activity_place_view);
 
         String placeId = getIntent().getStringExtra("placeId");
-        int caseNumber = getIntent().getIntExtra("caseNumber", 0);
+        caseNumber = getIntent().getIntExtra("caseNumber", 0);
         email = getIntent().getStringExtra("email");
 
         placeImageView = findViewById(R.id.placeImageView);
@@ -63,6 +80,11 @@ public class PlaceView extends AppCompatActivity {
         showOnMapButton = findViewById(R.id.showOnMapButton);
         descriptionTextView = findViewById(R.id.descriptionTextView);
         deleteButton = findViewById(R.id.deleteButton);
+        addressTextView = findViewById(R.id.addressTextView);
+        openedTextView = findViewById(R.id.openedTextView);
+        typesTextView = findViewById(R.id.typesTextView);
+        ratingTextView = findViewById(R.id.ratingTextView);
+        phoneTextView = findViewById(R.id.phoneTextView);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -77,13 +99,12 @@ public class PlaceView extends AppCompatActivity {
 
         switch (caseNumber){
             case 1:
-                showMyPlace(placeId, false);
+            case 3:
+            case 4:
+                showMyPlace(placeId);
                 break;
             case 2:
                 show100ntos(placeId);
-                break;
-            case 3:
-                showMyPlace(placeId, true);
                 break;
             default:
                 //
@@ -104,11 +125,20 @@ public class PlaceView extends AppCompatActivity {
     }
 
 
-    private void showMyPlace(String placeId, boolean isVisited){
-        navigationMenu(R.id.action_my_places);
+    private void showMyPlace(String placeId){
         deleteButton.setVisibility(View.VISIBLE);
-        if(isVisited)visitButton.setVisibility(View.INVISIBLE);
-        else visitButton.setText("Посети");
+        if(caseNumber==3){
+            visitButton.setVisibility(View.INVISIBLE);
+            navigationMenu(R.id.action_home);
+        }
+        else if(caseNumber==4){
+            visitButton.setText("Посети");
+            navigationMenu(R.id.action_nearest);
+        }
+        else {
+            visitButton.setText("Посети");
+            navigationMenu(R.id.action_my_places);
+        }
 
         QueryLocator.getMyPlaceById(placeId, new SinglePlaceCallback() {
             @Override
@@ -123,6 +153,8 @@ public class PlaceView extends AppCompatActivity {
                     } else {
                         flagImageView.setVisibility(View.GONE);
                     }
+                    String placeName = place.getName();
+                    getPlaceDetailsFromGoogle(placeName);
                     setHeartImg(place);
                     changeFavourite(place);
                     deletePlace(place);
@@ -158,6 +190,95 @@ public class PlaceView extends AppCompatActivity {
 
     }
 
+    private void getPlaceDetailsFromGoogle(String placeName) {
+        Log.d("PLACEDETAILS", "getPlaceDetailsFromGoogle");
+        // Construct the URL for the Google Places API request
+        String apiKey = "AIzaSyD_GRf1KLUaX7r8cIiRGSNgkeklL5F0u2I";
+        String url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json" +
+                "?input=" + placeName +
+                "&inputtype=textquery" +
+                "&fields=all" +
+                "&key=" + apiKey;
+
+        // Make the API call using Volley, Retrofit, or any other networking library of your choice
+        // For simplicity, I'll use Volley here
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Parse the JSON response to extract the place details
+                            JSONObject result = response.getJSONArray("candidates").getJSONObject(0);
+                            Log.d("PLACEDETAILS", String.valueOf(result));
+                            try{
+                                String formattedAddress = result.getString("formatted_address");
+                                Log.d("PLACEDETAILS", "address: "+formattedAddress);
+                                addressTextView.setText(formattedAddress);
+                            }catch (JSONException e){
+                                Log.d("PLACEDETAILS", Objects.requireNonNull(e.getMessage()));
+                            }
+
+                            try{
+                                double rating = result.getDouble("rating");
+                                Log.d("PLACEDETAILS", "rating: "+rating);
+                                ratingTextView.setText(String.valueOf(rating));
+                            }catch (JSONException e){
+                                Log.d("PLACEDETAILS", Objects.requireNonNull(e.getMessage()));
+                            }
+
+                            try{
+                                String formattedPhoneNumber = result.getString("formatted_phone_number");
+                                Log.d("PLACEDETAILS", "formattedPhoneNumber: "+formattedPhoneNumber);
+                                phoneTextView.setText(formattedPhoneNumber);
+                            }catch (JSONException e){
+                                Log.d("PLACEDETAILS", Objects.requireNonNull(e.getMessage()));
+                            }
+
+                            try{
+                                JSONObject openingHours = result.optJSONObject("opening_hours");
+                                if(openingHours!=null){
+                                    String openNow = openingHours.getString("open_now");
+                                    Log.d("PLACEDETAILS", "openingHours: "+openNow);
+                                    if(openNow.equals("true")) openedTextView.setText("Да");
+                                    else openedTextView.setText("Не");
+                                }
+
+                            }catch (JSONException e){
+                                Log.d("PLACEDETAILS", Objects.requireNonNull(e.getMessage()));
+                            }
+
+                            try{
+                                JSONArray typesArray = result.optJSONArray("types");
+                                if (typesArray != null) {
+                                    List<String> typesList = new ArrayList<>();
+
+                                    for (int i = 0; i < typesArray.length(); i++) {
+                                        String type = typesArray.getString(i);
+                                        typesList.add(type);
+                                    }
+                                    Log.d("PLACEDETAILS", "types: " + typesList.toString());
+                                    typesTextView.setText(typesList.toString());
+                                }
+                            }catch (JSONException e){
+                                Log.d("PLACEDETAILS", Objects.requireNonNull(e.getMessage()));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+
+        // Add the request to the Volley request queue
+        // Make sure you have Volley set up properly in your project
+        Volley.newRequestQueue(this).add(request);
+    }
+
     private void deletePlace(Place place){
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,7 +306,7 @@ public class PlaceView extends AppCompatActivity {
             public void onClick(View v) {
                 QueryLocator.deletePlace(place.getId());
                 Navigation nav = new Navigation(email, PlaceView.this);
-                nav.navigateToPlaceListView(1);
+                nav.navigateToPlaceListView(caseNumber);
             }
         });
 
@@ -229,6 +350,7 @@ public class PlaceView extends AppCompatActivity {
         navigationMenu(R.id.action_nto100);
         Log.d("NTO100_ID", "id: "+placeId);
         visitButton.setText("Добави за посещение");
+        Log.d("BUTTONADD", "299");
         QueryLocator.getNTO100ById(placeId, new SingleNTO100Callback() {
             @Override
             public void onNTOLoaded(NTO100 nto100) {
@@ -237,11 +359,10 @@ public class PlaceView extends AppCompatActivity {
                     refreshDistance(nto100);
                     // Display place details
                     placeNameTextView.setText(nto100.getNumberInNationalList()+". "+nto100.getName());
-                    String formatedDistance = formatDistance(nto100.getDistance());
-                    distanceTextView.setText(formatedDistance);
                     descriptionTextView.setText(nto100.getDescription());
                     flagImageView.setVisibility(View.VISIBLE);
                     favouriteButton.setVisibility(View.INVISIBLE);
+                    getPlaceDetailsFromGoogle(nto100.getName());
 
                     // Example for loading image using Glide
                     Glide.with(PlaceView.this)
@@ -267,9 +388,11 @@ public class PlaceView extends AppCompatActivity {
                             if(flag){
                                 visitButton.setEnabled(false);
                                 visitButton.setVisibility(View.INVISIBLE);
+                                Log.d("BUTTONADD", "336");
                             }else{
                                 visitButton.setEnabled(true);
                                 visitButton.setVisibility(View.VISIBLE);
+                                Log.d("BUTTONADD", "340");
                             }
                         }
 
@@ -282,11 +405,12 @@ public class PlaceView extends AppCompatActivity {
                     visitButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Place place = Helper.createPlaceFromNTO(nto100.getName() , nto100.getUrlMap(), nto100.getImgPath(), nto100.getDistance(), email, nto100.getId(), nto100.getDescription());
+                            Place place = Helper.createPlaceFromNTO(nto100.getName() , nto100.getUrlMap(), nto100.getImgPath(), email, nto100.getId(), nto100.getDescription());
                             QueryLocator.addANewPlace(place, nto100.getId());
                             Toast.makeText(PlaceView.this, "Мястото е добавено успешно!", Toast.LENGTH_LONG).show();
                             visitButton.setEnabled(false);
                             visitButton.setVisibility(View.INVISIBLE);
+                            Log.d("BUTTONADD", "358");
                         }
                     });
 
@@ -316,56 +440,52 @@ public class PlaceView extends AppCompatActivity {
     }
 
     public void refreshDistance(Object obj) {
+        if (obj instanceof Place) {
+            visitButton.setVisibility(View.INVISIBLE);
+            Log.d("BUTTONADD", "390");
+        }
         if (!Helper.isLocationEnabled(PlaceView.this)) {
             distanceTextView.setText("Разстоянието не е изчислено!");
             Toast.makeText(PlaceView.this, "Включете локацията  и презаредете!", Toast.LENGTH_LONG).show();
             return;
         }
 
-        ProgressDialog progressDialog = ProgressDialog.show(PlaceView.this, "Моля изчакайте", "Изчисляване на разстоянието...", true, false);
+        distanceTextView.setText("Изчисляване...");
 
         // Create a handler to implement the timeout
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                progressDialog.dismiss();
                 distanceTextView.setText("Разстоянието не е изчислено!");
                 Toast.makeText(PlaceView.this, "Включете локацията  и презаредете!", Toast.LENGTH_LONG).show();
             }
-        }, 20000); // 20 seconds timeout
+        }, 10000); // 20 seconds timeout
 
+        //вземането на текущата локация забавя процеса, защото когато изчлислявам на всички места,
+        // локацията вече веднъж е взета и не се бави повече
         Helper.getCurrentLocation(PlaceView.this, new com.example.turisticheska_knizhka.Callbacks.LocationCallback() {
             @Override
             public void onLocationResult(Location location) {
-                int distance = 0;
                 if (location != null) {
                     if (obj instanceof Place) {
                         Place place = (Place) obj;
                         // Calculate distance between current location and destination
                         distance = (int) Helper.calculateDistance(place.getUrlMap(), location);
                         Log.d("DISTANCE", "dst: " + distance);
-                        if (distance != -1) {
-                            // Display distance
-                            place.setDistance(distance);
-                            progressDialog.dismiss();
-                            QueryLocator.updatePlaceDistance(place, distance);
-                        }
                     } else if (obj instanceof NTO100) {
                         NTO100 nto100 = (NTO100) obj;
                         // Calculate distance between current location and destination
                         distance = (int) Helper.calculateDistance(nto100.getUrlMap(), location);
                         Log.d("DISTANCE", "dst: " + distance);
-                        if (distance != -1) {
-                            // Display distance
-                            nto100.setDistance(distance);
-                            progressDialog.dismiss();
-                            //QueryLocator.updatePlaceDistance(nto100, distance);
-                        }
                     }
                 }
                 String formattedString = formatDistance(distance);
                 distanceTextView.setText(formattedString);
+                if(caseNumber!=3 && caseNumber!=2){
+                    visitButton.setVisibility(View.VISIBLE);
+                    Log.d("BUTTONADD", "430");
+                }
                 // Remove the timeout callback
                 handler.removeCallbacksAndMessages(null);
             }
@@ -381,13 +501,14 @@ public class PlaceView extends AppCompatActivity {
     }
 
     private void visitPlace(Place place){
-            if(place.getDistance()<500 && distanceTextView.getText()!="Разстоянието не е изчислено!"){
+            if(distance<500 && distanceTextView.getText()!="Разстоянието не е изчислено!"){
                 place.setIsVisited(true);
                 QueryLocator.updatePlaceVisitation(place);
                 visitButton.setVisibility(View.INVISIBLE);
+                Log.d("BUTTONADD", "451");
                 Toast.makeText(PlaceView.this, "Успешно посетихте това място", Toast.LENGTH_LONG).show();
                 Navigation nav = new Navigation(email, PlaceView.this);
-                nav.navigateToPlaceListView(1);
+                nav.navigateToPlaceListView(caseNumber);
             }else{
                 Toast.makeText(PlaceView.this, "Трябва да сте на по-малко от 500 метра!", Toast.LENGTH_LONG).show();
             }
